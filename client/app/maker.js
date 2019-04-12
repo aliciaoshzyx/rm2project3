@@ -3,13 +3,13 @@ const handleExpense = (e) => {
 
     $("#message").animate({width:'hide'}, 350);
 
-    if($("#domoName").val() == '' || $("#domoAge").val() == ''){
-        handleError("RAWR! All fields are required");
+    if($("#expenseName").val() == '' || $("#expenseAmount").val() == ''){
+        handleError("All fields are required");
         return false;
     }
     
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function() {
-        loadDomosFromServer();
+    sendAjax('POST', $("#expenseForm").attr("action"), $("#expenseForm").serialize(), function() {
+        loadExpensessFromServer();
     });
     return false;
 };
@@ -206,7 +206,7 @@ const ExpenseForm = (props) => {
             <input id="expenseNotes" type="text" name="expenseNotes" placeholder="notes"/>
 
             <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="makeExpenseSubmit" type="submit" value="Make DOmo" />
+            <input className="makeExpenseSubmit" type="submit" value="Make Expense" />
         </form>
     )
 };
@@ -239,18 +239,18 @@ const ExpenseList = function(props) {
 const loadExpensesFromServer = () => {
     sendAjax('GET', '/getExpenses', null, (data) => {
         ReactDOM.render(
-            <DomoList expenses={data.expenses} />, document.querySelector("#expenses")
+            <ExpenseList expenses={data.expenses} />, document.querySelector("#expenses")
         );
     });
 };
 
 const setup = function(csrf) {
     ReactDOM.render(
-        <DomoForm csrf={csrf} />, document.querySelector("#makeExpense")
+        <ExpenseForm csrf={csrf} />, document.querySelector("#makeExpense")
     );
 
     ReactDOM.render(
-        <DomoList expenses={[]} />, document.querySelector("#expenses")
+        <ExpenseList expenses={[]} />, document.querySelector("#expenses")
     );
     loadExpensesFromServer();
 };

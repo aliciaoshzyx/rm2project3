@@ -22,28 +22,28 @@ const ExpenseSchema = new mongoose.Schema({
   },
 
   intensity: {
-      type: String,
-      required: true,
+    type: String,
+    required: true,
   },
 
   month: {
-      type: String,
-      required: true,
+    type: String,
+    required: true,
   },
 
   year: {
-      type:String,
-      required: true,
+    type: String,
+    required: true,
   },
 
-  day:{
-      type: String,
-      required: false
+  day: {
+    type: String,
+    required: false,
   },
 
   notes: {
-      type: String,
-      required: false, 
+    type: String,
+    required: false,
   },
 
   owner: {
@@ -68,7 +68,7 @@ ExpenseSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return ExpenseModel.find(search).select('name age').exec(callback);
+  return ExpenseModel.find(search).select('name amount').exec(callback);
 };
 
 ExpenseModel = mongoose.model('Expense', ExpenseSchema);

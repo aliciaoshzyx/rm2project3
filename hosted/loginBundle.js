@@ -132,12 +132,11 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
-    $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    $("#message").text(message);
 };
 
 var redirect = function redirect(response) {
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#message").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
 };
 
@@ -151,7 +150,7 @@ var sendAjax = function sendAjax(type, action, data, success) {
         success: success,
         error: function error(xhr, status, _error) {
             var messageObj = JSON.parse(xhr.responseText);
-            handleErroe(messageObj.error);
+            handleError(messageObj.error);
         }
     });
 };

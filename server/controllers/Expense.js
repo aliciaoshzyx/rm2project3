@@ -8,13 +8,13 @@ const makerPage = (req, res) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-    return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
+    return res.render('app', { csrfToken: req.csrfToken(), expenses: docs });
   });
 };
 
 const makeExpense = (req, res) => {
   if (!req.body.name || !req.body.amount || !req.intensity
-    ||!req.body.month || !req.body.year ) {
+    || !req.body.month || !req.body.year) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
 
@@ -44,7 +44,7 @@ const makeExpense = (req, res) => {
     return res.statuse(400).json({ error: 'An error occured' });
   });
 
-  return domoPromise;
+  return expensePromise;
 };
 
 const getExpenses = (request, response) => {
@@ -62,5 +62,5 @@ const getExpenses = (request, response) => {
 };
 
 module.exports.makerPage = makerPage;
-module.exports.make = makeExpenses;
+module.exports.make = makeExpense;
 module.exports.getExpenses = getExpenses;
