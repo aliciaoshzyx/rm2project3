@@ -2,7 +2,7 @@ const models = require('../models');
 
 const Song = models.Song;
 
-const makerPage = (req, res) => {
+const makerPageSong = (req, res) => {
   Song.SongModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
@@ -28,13 +28,13 @@ const makeSong = (req, res) => {
     art: req.body.songArt,
     owner: req.session.account._id,
   };
-  
-  console.log("data" + JSON.stringify(songData));
+
+  console.log(`data${JSON.stringify(songData)}`);
   const newSong = new Song.SongModel(songData);
 
   const songPromise = newSong.save();
 
-  songPromise.then(() => res.json({ redirect: '/maker' }));
+  songPromise.then(() => res.json({ redirect: '/makerSong' }));
 
   songPromise.catch((err) => {
     console.log(err);
@@ -62,6 +62,6 @@ const getSongs = (request, response) => {
   });
 };
 
-module.exports.makerPage = makerPage;
-module.exports.make = makeSong;
+module.exports.makerPageSong = makerPageSong;
+module.exports.makeSong = makeSong;
 module.exports.getSongs = getSongs;
