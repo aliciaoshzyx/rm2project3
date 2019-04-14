@@ -47,6 +47,10 @@ const validatePassword = (doc, password, callback) => {
   });
 };
 
+AccountSchema.statics.updatePassword = (user, sa, newPass, callback) => 
+AccountModel.findOneAndUpdate({ username: user },
+  { $set: { password: newPass, salt: sa } }).exec(callback);
+
 AccountSchema.statics.findByUsername = (name, callback) => {
   const search = {
     username: name,

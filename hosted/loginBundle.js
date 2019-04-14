@@ -93,6 +93,37 @@ var SignupWindow = function SignupWindow(props) {
     );
 };
 
+var PasswordWindow = function PasswordWindow(props) {
+    return React.createElement(
+        "form",
+        { id: "passChangeForm",
+            name: "passChangeForm",
+            action: "/changePass",
+            method: "POST",
+            className: "mainForm" },
+        React.createElement(
+            "label",
+            { "for": "oldPass" },
+            "old password: "
+        ),
+        React.createElement("input", { id: "oldPass", type: "text", name: "oldPass", placeholder: "old password" }),
+        React.createElement(
+            "label",
+            { "for": "newPass" },
+            "new password: "
+        ),
+        React.createElement("input", { id: "newPass", type: "password", name: "newPass", placeholder: "new password" }),
+        React.createElement(
+            "label",
+            { "for": "newPass2" },
+            "retype password: "
+        ),
+        React.createElement("input", { id: "newPass2", type: "password", name: "newPass2", placeholder: "retype password" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { "class": "formSubmitC", type: "submit", value: "Change Password" })
+    );
+};
+
 var createLoginWindow = function createLoginWindow(csrf) {
     ReactDOM.render(React.createElement(LoginWindow, { csrf: csrf }), document.querySelector("#content"));
 };
@@ -101,23 +132,39 @@ var createSignupWindow = function createSignupWindow(csrf) {
     ReactDOM.render(React.createElement(SignupWindow, { csrf: csrf }), document.querySelector("#content"));
 };
 
+var createPassWindow = function createPassWindow(csrf) {
+    console.log(csrf);
+    ReactDOM.render(React.createElement(PasswordWindow, { csrf: csrf }), document.querySelector("#content"));
+};
+
 var setup = function setup(csrf) {
     var loginButton = document.querySelector("#loginButton");
     var signupButton = document.querySelector("#signupButton");
+    var changePassButton = document.querySelector("#changePassButton");
 
-    signupButton.addEventListener("click", function (e) {
-        e.preventDefault();
-        createSignupWindow(csrf);
-        return false;
-    });
-
-    loginButton.addEventListener("click", function (e) {
-        e.preventDefault();
+    if (signupButton) {
+        signupButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            createSignupWindow(csrf);
+            return false;
+        });
+    }
+    if (loginButton) {
+        loginButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            createLoginWindow(csrf);
+            return false;
+        });
         createLoginWindow(csrf);
-        return false;
-    });
-
-    createLoginWindow(csrf);
+    }
+    if (changePassButton) {
+        changePassButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            createPassWindow(csrf);
+            return false;
+        });
+        createPassWindow(csrf);
+    }
 };
 
 var getToken = function getToken() {

@@ -1,60 +1,68 @@
 const models = require('../models');
 
-const Domo = models.Domo;
+const Album = models.Album;
 
-const makerPage = (req, res) => {
-  Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
+const makerPageAlbum = (req, res) => {
+  Album.AlbumModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-    return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
+    return res.render('app', { csrfToken: req.csrfToken(), albums: docs });
   });
 };
 
-const makeDomo = (req, res) => {
-  if (!req.body.name || !req.body.age) {
-    return res.status(400).json({ error: 'RAWR! Both name and age are required' });
+const makeAlbum = (req, res) => {
+  console.log('in make Album');
+  console.log(req.body.albumTracks);
+  if (!req.body.albumName) {
+    return res.status(400).json({ error: 'Not all required fields filled' });
   }
+  console.log("after if")
 
-  const domoData = {
-    name: req.body.name,
-    age: req.body.age,
+  const albumData = {
+    name: req.body.albumName,
+    artist: req.body.albumArtist,
+    art: req.body.albumArt,
+    genere: req.body.albumGenere,
+    tracks: JSON.parse(req.body.albumTracks),
+    trackPrevs: JSON.parse(req.body.albumTrackPrev),
     owner: req.session.account._id,
   };
 
-  const newDomo = new Domo.DomoModel(domoData);
+  console.log(`data${JSON.stringify(albumData)}`);
+  const newAlbum = new Album.AlbumModel(albumData);
 
-  const domoPromise = newDomo.save();
+  const albumPromise = newAlbum.save();
 
-  domoPromise.then(() => res.json({ redirect: '/makerSong' }));
+  albumPromise.then(() => res.json({ redirect: '/makerAlbum' }));
 
-  domoPromise.catch((err) => {
+  albumPromise.catch((err) => {
     console.log(err);
     if (err.code === 11000) {
-      return res.status(400).json({ error: 'Domo already exists.' });
+      return res.status(400).json({ error: 'Album already exists.' });
     }
 
     return res.statuse(400).json({ error: 'An error occured' });
   });
 
-  return domoPromise;
+  return albumPromise;
 };
 
-const getDomos = (request, response) => {
+const getAlbums = (request, response) => {
   const req = request;
   const res = response;
 
-  return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
+  return Album.AlbumModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({ domos: docs });
+    return res.json({ albums: docs });
   });
 };
 
-module.exports.makerPage = makerPage;
-module.exports.make = makeDomo;
-module.exports.getDomos = getDomos;
+module.exports.makerPageAlbum = makerPageAlbum;
+module.exports.makeAlbum = makeAlbum;
+module.exports.getAlbums = getAlbums;

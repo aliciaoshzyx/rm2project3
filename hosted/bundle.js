@@ -2,7 +2,6 @@
 
 var handleSong = function handleSong(e) {
     e.preventDefault();
-    console.log("in handlesong");
     $("#message").animate({ width: 'hide' }, 350);
 
     if ($("#songName").val() == '') {
@@ -17,7 +16,6 @@ var handleSong = function handleSong(e) {
     var art = '';
     var link = '';
     var url = '';
-    console.log(song);
     if ($("#songArtist").val() == '') {
         url = "https://itunes.apple.com/search?term=" + song;
     } else {
@@ -42,14 +40,12 @@ var handleSong = function handleSong(e) {
 
     });
 
-    console.log(song + " " + type + " " + album + " " + song + " " + art + " " + link);
     $("#songName").val(song);
     $("#songArtist").val(artist);
     $("#songType").val(type);
     $("#songAlbum").val(album);
     $("#songArt").val(art);
     $("#songLink").val(link);
-    console.log("serial " + $("#songForm").serialize());
     sendAjax('POST', $("#songForm").attr("action"), $("#songForm").serialize(), function () {
 
         loadSongsFromServer();
@@ -112,6 +108,78 @@ var handleArtist = function handleArtist(e) {
     return false;
 };
 
+var handleAlbum = function handleAlbum(e) {
+    e.preventDefault();
+    console.log("in handlealbum");
+    $("#message").animate({ width: 'hide' }, 350);
+
+    if ($("#albumName").val() == '') {
+        handleError("All fields are required");
+        return false;
+    }
+    var album = $("#albumName").val();
+    var artistNeeded = true;
+    var artist = $("#albumArtist").val();
+    var genere = '';
+    var art = '';
+    var tracks = [];
+    var trackPrevs = [];
+    var albId = '';
+    var url = '';
+    if ($("#albumArtist").val() == '') {
+        url = "https://itunes.apple.com/search?term=" + album;
+    } else {
+        url = "https://itunes.apple.com/search?term=" + album + "+" + artist;
+    }
+
+    $.ajax({
+        url: url,
+        async: false,
+        type: "GET",
+        dataType: 'json',
+        success: function success(result) {
+            album = result.results[0].collectionName;
+            albId = result.results[0].collectionId;
+            art = result.results[0].artworkUrl100;
+            genere = result.results[0].primaryGenreName;
+            if (artistNeeded) {
+                artist = result.results[0].artistName;
+            }
+        }
+
+    });
+    url = "https://itunes.apple.com/lookup?id=" + albId + "&entity=song";
+    console.log(url);
+    $.ajax({
+        url: url,
+        async: false,
+        type: "GET",
+        dataType: 'json',
+        success: function success(result) {
+            for (var i = 0; i < result.resultCount; i++) {
+                if (result.results[i].wrapperType == "track") {
+                    tracks.push(result.results[i].trackName);
+                    trackPrevs.push(result.results[i].previewUrl);
+                    console.log(result.results[i].previewUrl);
+                }
+            }
+        }
+    });
+    console.log(JSON.stringify(trackPrevs));
+    $("#albumName").val(album);
+    $("#albumArtist").val(artist);
+    $("#albumGenere").val(genere);
+    $("#albumArt").val(art);
+    $("#albumTracks").val(JSON.stringify(tracks));
+    $("#albumTrackPrev").val(JSON.stringify(trackPrevs));
+    console.log("serial " + $("#albumForm").serialize());
+    sendAjax('POST', $("#albumForm").attr("action"), $("#albumForm").serialize(), function () {
+
+        loadAlbumsFromServer();
+    });
+    return false;
+};
+
 var SongForm = function SongForm(props) {
     return React.createElement(
         "form",
@@ -169,9 +237,9 @@ var SongList = function SongList(props) {
             ),
             React.createElement(
                 "h3",
-                { className: "songsong" },
+                { className: "songArtist" },
                 "song: ",
-                song.song,
+                song.artist,
                 " "
             ),
             React.createElement(
@@ -275,15 +343,134 @@ var loadArtistsFromServer = function loadArtistsFromServer() {
     });
 };
 
+var AlbumForm = function AlbumForm(props) {
+    return React.createElement(
+        "form",
+        { id: "albumForm",
+            onSubmit: handleAlbum,
+            name: "albumForm",
+            action: "/makerAlbum",
+            method: "POST",
+            className: "albumForm"
+        },
+        React.createElement(
+            "label",
+            { htmlFor: "albumName" },
+            "Album: "
+        ),
+        React.createElement("input", { id: "albumName", type: "text", name: "albumName", placeholder: "V (Deluxe)" }),
+        React.createElement(
+            "label",
+            { htmlFor: "albumArtist" },
+            "Artist: "
+        ),
+        React.createElement("input", { id: "albumArtist", type: "text", name: "albumArtist", placeholder: "Maroon 5" }),
+        React.createElement("input", { id: "albumGenere", type: "hidden", name: "albumGenere", value: "" }),
+        React.createElement("input", { id: "albumTracks", type: "hidden", name: "albumTracks", value: "" }),
+        React.createElement("input", { id: "albumTrackPrev", type: "hidden", name: "albumTrackPrev", value: "" }),
+        React.createElement("input", { id: "albumArt", type: "hidden", name: "albumArt", value: "" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "makeAlbumSubmit", type: "submit", value: "Add album" })
+    );
+};
+
+var AlbumList = function AlbumList(props) {
+    if (props.albums.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "albumList" },
+            React.createElement(
+                "h3",
+                { className: "emptyAlbum" },
+                "No Entries Yet"
+            )
+        );
+    }
+
+    var albumNodes = props.albums.map(function (album) {
+        var trackNodes = album.tracks.map(function (track) {
+            return React.createElement(
+                "div",
+                { className: "track" },
+                React.createElement(
+                    "h3",
+                    { className: "trackInd" },
+                    track
+                )
+            );
+        });
+
+        var trackPrevNodes = album.trackPrevs.map(function (trackPrev) {
+            return React.createElement(
+                "div",
+                { className: "prev" },
+                React.createElement("audio", { controls: true, className: "trackPrev", src: trackPrev })
+            );
+        });
+
+        return React.createElement(
+            "div",
+            { key: album._id, className: "album" },
+            React.createElement(
+                "h3",
+                { className: "albumName" },
+                "Name: ",
+                album.name,
+                " "
+            ),
+            React.createElement(
+                "h3",
+                { className: "albumArtist" },
+                "Artist:",
+                album.artist
+            ),
+            React.createElement("img", { className: "albumArt", src: album.art }),
+            React.createElement(
+                "h3",
+                { className: "albumGenere" },
+                "Genere: ",
+                album.genere,
+                " "
+            ),
+            React.createElement(
+                "div",
+                { className: "trackList" },
+                trackNodes
+            ),
+            React.createElement(
+                "div",
+                { className: "prevList" },
+                trackPrevNodes
+            )
+        );
+    });
+
+    return React.createElement(
+        "div",
+        { className: "albumList" },
+        albumNodes
+    );
+};
+
+var loadAlbumsFromServer = function loadAlbumsFromServer() {
+    sendAjax('GET', '/getAlbums', null, function (data) {
+        ReactDOM.render(React.createElement(AlbumList, { albums: data.albums }), document.querySelector("#albums"));
+    });
+};
+
 var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(SongForm, { csrf: csrf }), document.querySelector("#makeSong"));
     ReactDOM.render(React.createElement(ArtistForm, { csrf: csrf }), document.querySelector("#makeArtist"));
+    ReactDOM.render(React.createElement(AlbumForm, { csrf: csrf }), document.querySelector("#makeAlbum"));
 
     ReactDOM.render(React.createElement(SongList, { songs: [] }), document.querySelector("#songs"));
 
     ReactDOM.render(React.createElement(ArtistList, { artists: [] }), document.querySelector("#artists"));
+    ReactDOM.render(React.createElement(AlbumList, { albums: [] }), document.querySelector("#albums"));
+
     loadSongsFromServer();
     loadArtistsFromServer();
+    loadAlbumsFromServer();
 };
 
 var getToken = function getToken() {

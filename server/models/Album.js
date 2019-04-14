@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const _ = require('underscore');
 
-let DomoModel = {};
+let AlbumModel = {};
 
 const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
-const DomoSchema = new mongoose.Schema({
+const AlbumSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -15,11 +15,30 @@ const DomoSchema = new mongoose.Schema({
     set: setName,
   },
 
-  age: {
-    type: Number,
-    min: 0,
+  artist: {
+    type: String,
     required: true,
   },
+
+  art: {
+    type: String,
+    required: true,
+  },
+
+  genere: {
+    type: String,
+    required: true,
+  },
+
+  tracks: [{
+    type: String,
+    required: true,
+  }],
+
+  trackPrevs: [{
+    type: String,
+    required: true,
+  }],
 
   owner: {
     type: mongoose.Schema.ObjectId,
@@ -33,20 +52,25 @@ const DomoSchema = new mongoose.Schema({
   },
 });
 
-DomoSchema.statics.toAPI = (doc) => ({
+AlbumSchema.statics.toAPI = (doc) => ({
   name: doc.name,
-  age: doc.age,
+  artist: doc.artist,
+  art: doc.art,
+  genere: doc.genere,
+  tracks: doc.tracks,
+  trackPrevs: doc.trackPrev,
+  owner: doc.owner,
 });
 
-DomoSchema.statics.findByOwner = (ownerId, callback) => {
+AlbumSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
 
-  return DomoModel.find(search).select('name age').exec(callback);
+  return AlbumModel.find(search).select('name artist art genere tracks trackPrevs owner').exec(callback);
 };
 
-DomoModel = mongoose.model('Domo', DomoSchema);
+AlbumModel = mongoose.model('Album', AlbumSchema);
 
-module.exports.DomoModel = DomoModel;
-module.exports.DomoSchema = DomoSchema;
+module.exports.AlbumModel = AlbumModel;
+module.exports.AlbumSchema = AlbumSchema;

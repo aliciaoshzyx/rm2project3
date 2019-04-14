@@ -72,6 +72,26 @@ const SignupWindow = (props) => {
     )
 };
 
+const PasswordWindow = (props) => {
+    return(
+        
+        <form id="passChangeForm" 
+        name="passChangeForm" 
+        action="/changePass" 
+        method="POST" 
+        className="mainForm">
+          <label for="oldPass">old password: </label>
+          <input id="oldPass" type="text" name="oldPass" placeholder="old password"/>
+          <label for="newPass">new password: </label>
+          <input id="newPass" type="password" name="newPass" placeholder="new password"/>
+          <label for="newPass2">retype password: </label>
+          <input id="newPass2" type="password" name="newPass2" placeholder="retype password"/>
+          <input type="hidden" name="_csrf" value={props.csrf} />
+          <input class="formSubmitC" type="submit" value="Change Password" />
+        </form>
+    )
+}
+
 const createLoginWindow = (csrf) => {
     ReactDOM.render(<LoginWindow csrf={csrf} />, document.querySelector("#content"));
 };
@@ -80,23 +100,40 @@ const createSignupWindow = (csrf) => {
     ReactDOM.render(<SignupWindow csrf={csrf} />, document.querySelector("#content"));
 };
 
+const createPassWindow = (csrf) => {
+    console.log(csrf);
+    ReactDOM.render(<PasswordWindow csrf={csrf} />, document.querySelector("#content"));
+}
+
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
+    const changePassButton = document.querySelector("#changePassButton");
 
-    signupButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        createSignupWindow(csrf);
-        return false;
-    });
-
-    loginButton.addEventListener("click", (e) => {
-        e.preventDefault();
+    if(signupButton){
+        signupButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            createSignupWindow(csrf);
+            return false;
+        });
+    }
+    if(loginButton){
+        loginButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            createLoginWindow(csrf);
+            return false;
+        });
         createLoginWindow(csrf);
-        return false;
-    });
-
-    createLoginWindow(csrf);
+    }
+    if(changePassButton){
+        changePassButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            createPassWindow(csrf);
+            return false;
+        });
+        createPassWindow(csrf);
+    }
+    
 };
 
 const getToken = () => {

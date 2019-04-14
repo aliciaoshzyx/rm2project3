@@ -1,6 +1,5 @@
 const handleSong = (e) => {
     e.preventDefault();
-    console.log("in handlesong");
     $("#message").animate({width:'hide'}, 350);
 
     if($("#songName").val() == ''){
@@ -15,7 +14,6 @@ const handleSong = (e) => {
     let art = '';
     let link = '';
     let url = '';
-    console.log(song);
     if($("#songArtist").val() == ''){
         url = "https://itunes.apple.com/search?term=" + song;}else{
         url = "https://itunes.apple.com/search?term=" + song + "+" + artist;
@@ -41,14 +39,12 @@ const handleSong = (e) => {
        });
      
     
-     console.log(song + " " + type + " " + album + " " + song + " " + art  + " " + link);
      $("#songName").val(song);
      $("#songArtist").val(artist);
      $("#songType").val(type);
      $("#songAlbum").val(album);
      $("#songArt").val(art);
      $("#songLink").val(link);
-     console.log("serial " + $("#songForm").serialize());
      sendAjax('POST', $("#songForm").attr("action"), $("#songForm").serialize(), function() {
          
         loadSongsFromServer();
@@ -112,6 +108,78 @@ const handleArtist = (e) => {
     return false;
 };
 
+const handleAlbum = (e) => {
+    e.preventDefault();
+    console.log("in handlealbum");
+    $("#message").animate({width:'hide'}, 350);
+
+    if($("#albumName").val() == ''){
+        handleError("All fields are required");
+        return false;
+    }
+    let album = $("#albumName").val();
+    let artistNeeded = true;
+    let artist = $("#albumArtist").val();
+    let genere ='';
+    let art = '';
+    let tracks = [];
+    let trackPrevs = [];
+    let albId = '';
+    let url = '';
+    if($("#albumArtist").val() == ''){
+        url = "https://itunes.apple.com/search?term=" + album;}else{
+        url = "https://itunes.apple.com/search?term=" + album + "+" + artist;
+    }
+
+    $.ajax({ 
+        url: url, 
+        async: false,
+        type: "GET",
+        dataType: 'json',
+        success:(result) => {
+             album = result.results[0].collectionName;
+             albId = result.results[0].collectionId;
+             art = result.results[0].artworkUrl100;
+             genere = result.results[0].primaryGenreName;
+             if(artistNeeded){
+                artist = result.results[0].artistName;
+              } 
+           }
+
+           
+       });
+    url = "https://itunes.apple.com/lookup?id=" + albId + "&entity=song";
+    console.log(url);
+       $.ajax({ 
+        url: url, 
+        async: false,
+        type: "GET",
+        dataType: 'json',
+        success:(result) => {
+            for(let i = 0; i < result.resultCount; i++){
+                if(result.results[i].wrapperType == "track"){
+                    tracks.push(result.results[i].trackName);
+                    trackPrevs.push(result.results[i].previewUrl);
+                    console.log(result.results[i].previewUrl);
+                }
+            }
+       }
+    });
+    console.log(JSON.stringify(trackPrevs));
+     $("#albumName").val(album);
+     $("#albumArtist").val(artist);
+     $("#albumGenere").val(genere);
+     $("#albumArt").val(art);
+     $("#albumTracks").val(JSON.stringify(tracks));
+     $("#albumTrackPrev").val(JSON.stringify(trackPrevs));
+     console.log("serial " + $("#albumForm").serialize());
+     sendAjax('POST', $("#albumForm").attr("action"), $("#albumForm").serialize(), function() {
+       
+        loadAlbumsFromServer();
+    });
+    return false;
+};
+
 const SongForm = (props) => {
     return (
         <form id="songForm"
@@ -148,7 +216,7 @@ const SongList = function(props) {
         return (
             <div key={song._id} className="song">
                 <h3 className="songName">Name: {song.name} </h3>
-                <h3 className="songsong">song: {song.song} </h3>
+                <h3 className="songArtist">song: {song.artist} </h3>
                 <h3 className="songType">Type: {song.type}</h3>
                 <h3 className="songAlbum">Album: {song.album}</h3>
                 <img className="songArt" src={song.art}/>
@@ -226,12 +294,100 @@ const loadArtistsFromServer = () => {
     });
 };
 
+const AlbumForm = (props) => {
+    return (
+        <form id="albumForm"
+            onSubmit={handleAlbum}
+            name="albumForm"
+            action="/makerAlbum"
+            method="POST"
+            className="albumForm"
+        >
+            <label htmlFor="albumName">Album: </label>
+            <input id="albumName" type="text" name="albumName" placeholder="V (Deluxe)"/>
+            <label htmlFor="albumArtist">Artist: </label>
+            <input id="albumArtist" type="text" name="albumArtist" placeholder="Maroon 5"/>
+            <input id="albumGenere" type="hidden" name="albumGenere" value=''/>
+            <input id="albumTracks" type="hidden" name="albumTracks" value=""/>
+            <input id="albumTrackPrev" type="hidden" name="albumTrackPrev" value=""/>
+            <input id="albumArt" type="hidden" name="albumArt" value=''/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="makeAlbumSubmit" type="submit" value="Add album" />
+        </form>
+    )
+};
+
+const AlbumList = function(props) {
+    if(props.albums.length === 0){
+        return (
+            <div className="albumList">
+                <h3 className="emptyAlbum">No Entries Yet</h3>
+            </div>
+        );
+    }
+
+
+
+    const albumNodes = props.albums.map(function(album) {
+        const trackNodes = album.tracks.map(function(track) {
+            return (
+                <div className="track">
+                    <h3 className="trackInd">{track}</h3>
+                </div>
+            )
+        });
+
+        const trackPrevNodes = album.trackPrevs.map(function(trackPrev) {
+            return (
+                 <div className="prev">
+                     <audio controls className="trackPrev" src ={trackPrev}/>
+                </div>
+            )
+        })
+
+        
+        return (
+            <div key={album._id} className="album">
+                <h3 className="albumName">Name: {album.name} </h3>
+                <h3 className="albumArtist">Artist:{album.artist}</h3>
+                <img className="albumArt" src={album.art}/>
+                <h3 className="albumGenere">Genere: {album.genere} </h3>
+                
+                <div className="trackList">
+                    {trackNodes}
+                </div>
+                <div className="prevList">
+                    {trackPrevNodes}
+                </div>
+                
+            </div>
+        );
+    });
+
+    return (
+        <div className="albumList">
+            {albumNodes}
+        </div>
+    );
+};
+
+const loadAlbumsFromServer = () => {
+    sendAjax('GET', '/getAlbums', null, (data) => {
+        ReactDOM.render(
+            <AlbumList albums={data.albums} />, document.querySelector("#albums")
+        );
+    });
+};
+
 const setup = function(csrf) {
     ReactDOM.render(
         <SongForm csrf={csrf} />, document.querySelector("#makeSong")
     );
     ReactDOM.render(
         <ArtistForm csrf={csrf} />, document.querySelector("#makeArtist")
+    );
+    ReactDOM.render(
+        <AlbumForm csrf={csrf} />, document.querySelector("#makeAlbum")
     );
 
     ReactDOM.render(
@@ -241,8 +397,13 @@ const setup = function(csrf) {
     ReactDOM.render(
         <ArtistList artists={[]} />, document.querySelector("#artists")
     );
+    ReactDOM.render(
+        <AlbumList albums={[]} />, document.querySelector("#albums")
+    );
+
     loadSongsFromServer();
     loadArtistsFromServer();
+    loadAlbumsFromServer();
 };
 
 const getToken = () => {
