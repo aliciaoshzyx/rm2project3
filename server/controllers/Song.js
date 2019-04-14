@@ -12,6 +12,16 @@ const makerPageSong = (req, res) => {
   });
 };
 
+const communityPageSong = (req, res) => {
+  Song.SongModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+    return res.render('community', { csrfToken: req.csrfToken(), songs: docs });
+  });
+};
+
 const makeSong = (req, res) => {
   console.log('in make song');
   console.log(req.body);
@@ -48,6 +58,8 @@ const makeSong = (req, res) => {
   return songPromise;
 };
 
+
+
 const getSongs = (request, response) => {
   const req = request;
   const res = response;
@@ -62,6 +74,22 @@ const getSongs = (request, response) => {
   });
 };
 
+const getAllSongs = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Song.SongModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.json({ songs: docs });
+  });
+};
+
 module.exports.makerPageSong = makerPageSong;
 module.exports.makeSong = makeSong;
 module.exports.getSongs = getSongs;
+module.exports.getAllSongs = getAllSongs;
+module.exports.communityPageSong = communityPageSong;

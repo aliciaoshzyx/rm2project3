@@ -40,6 +40,12 @@ const AlbumSchema = new mongoose.Schema({
     required: true,
   }],
 
+  upvotes: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
@@ -61,6 +67,8 @@ AlbumSchema.statics.toAPI = (doc) => ({
   trackPrevs: doc.trackPrev,
   owner: doc.owner,
 });
+
+AlbumSchema.statics.findAll = (callback) => AlbumModel.find().exec(callback);
 
 AlbumSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {

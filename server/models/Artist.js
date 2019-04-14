@@ -44,6 +44,8 @@ ArtistSchema.statics.toAPI = (doc) => ({
   owner: doc.owner,
 });
 
+ArtistSchema.statics.findAll = (callback) => ArtistSchema.find().exec(callback);
+
 ArtistSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),

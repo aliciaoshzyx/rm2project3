@@ -268,7 +268,7 @@ var SongList = function SongList(props) {
 
 var loadSongsFromServer = function loadSongsFromServer() {
     sendAjax('GET', '/getSongs', null, function (data) {
-        ReactDOM.render(React.createElement(SongList, { songs: data.songs }), document.querySelector("#songs"));
+        ReactDOM.render(React.createElement(SongList, { songs: data.songs }), document.querySelector("#allT"));
     });
 };
 
@@ -339,7 +339,7 @@ var ArtistList = function ArtistList(props) {
 
 var loadArtistsFromServer = function loadArtistsFromServer() {
     sendAjax('GET', '/getArtists', null, function (data) {
-        ReactDOM.render(React.createElement(ArtistList, { artists: data.artists }), document.querySelector("#artists"));
+        ReactDOM.render(React.createElement(ArtistList, { artists: data.artists }), document.querySelector("#allT"));
     });
 };
 
@@ -454,23 +454,83 @@ var AlbumList = function AlbumList(props) {
 
 var loadAlbumsFromServer = function loadAlbumsFromServer() {
     sendAjax('GET', '/getAlbums', null, function (data) {
-        ReactDOM.render(React.createElement(AlbumList, { albums: data.albums }), document.querySelector("#albums"));
+        ReactDOM.render(React.createElement(AlbumList, { albums: data.albums }), document.querySelector("#allT"));
     });
 };
 
-var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(SongForm, { csrf: csrf }), document.querySelector("#makeSong"));
-    ReactDOM.render(React.createElement(ArtistForm, { csrf: csrf }), document.querySelector("#makeArtist"));
-    ReactDOM.render(React.createElement(AlbumForm, { csrf: csrf }), document.querySelector("#makeAlbum"));
+var createMakeSong = function createMakeSong(csrf) {
+    ReactDOM.render(React.createElement(SongForm, { csrf: csrf }), document.querySelector("#make"));
+};
 
-    ReactDOM.render(React.createElement(SongList, { songs: [] }), document.querySelector("#songs"));
+var createMakeArtist = function createMakeArtist(csrf) {
+    ReactDOM.render(React.createElement(ArtistForm, { csrf: csrf }), document.querySelector("#make"));
+};
 
-    ReactDOM.render(React.createElement(ArtistList, { artists: [] }), document.querySelector("#artists"));
-    ReactDOM.render(React.createElement(AlbumList, { albums: [] }), document.querySelector("#albums"));
+var createMakeAlbum = function createMakeAlbum(csrf) {
+    ReactDOM.render(React.createElement(AlbumForm, { csrf: csrf }), document.querySelector("#make"));
+};
 
+var createAllSong = function createAllSong(csrf) {
+    ReactDOM.render(React.createElement(SongList, { songs: [] }), document.querySelector("#allT"));
     loadSongsFromServer();
+};
+
+var createAllArtist = function createAllArtist(csrf) {
+    ReactDOM.render(React.createElement(ArtistList, { artists: [] }), document.querySelector("#allT"));
     loadArtistsFromServer();
+};
+
+var createAllAlbum = function createAllAlbum(csrf) {
+    ReactDOM.render(React.createElement(AlbumList, { albums: [] }), document.querySelector("#allT"));
     loadAlbumsFromServer();
+};
+
+var setup = function setup(csrf) {
+    var songButton = document.querySelector("#makeSong");
+    var artistButton = document.querySelector("#makeArtist");
+    var albumButton = document.querySelector("#makeAlbum");
+    var allSongButt = document.querySelector("#showSong");
+    var allArtistButt = document.querySelector("#showArtist");
+    var allAlbumButt = document.querySelector("#showAlbum");
+
+    songButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        createMakeSong(csrf);
+        return false;
+    });
+
+    artistButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        createMakeArtist(csrf);
+        return false;
+    });
+
+    albumButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        createMakeAlbum(csrf);
+        return false;
+    });
+
+    allSongButt.addEventListener("click", function (e) {
+        e.preventDefault();
+        createAllSong(csrf);
+
+        return false;
+    });
+
+    allArtistButt.addEventListener("click", function (e) {
+        e.preventDefault();
+        createAllArtist(csrf);
+
+        return false;
+    });
+
+    allAlbumButt.addEventListener("click", function (e) {
+        e.preventDefault();
+        createAllAlbum(csrf);
+
+        return false;
+    });
 };
 
 var getToken = function getToken() {

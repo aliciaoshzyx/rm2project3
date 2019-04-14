@@ -12,6 +12,16 @@ const makerPageAlbum = (req, res) => {
   });
 };
 
+const communityPageAlbum = (req, res) => {
+  Album.AlbumModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+    return res.render('community', { csrfToken: req.csrfToken(), albums: docs });
+  });
+};
+
 const makeAlbum = (req, res) => {
   console.log('in make Album');
   console.log(req.body.albumTracks);
@@ -63,6 +73,22 @@ const getAlbums = (request, response) => {
   });
 };
 
+const getAllAlbums = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Album.AlbumModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.json({ albums: docs });
+  });
+};
+
 module.exports.makerPageAlbum = makerPageAlbum;
 module.exports.makeAlbum = makeAlbum;
 module.exports.getAlbums = getAlbums;
+module.exports.getAllAlbums = getAllAlbums;
+module.exports.communityPageAlbum = communityPageAlbum;

@@ -235,7 +235,7 @@ const SongList = function(props) {
 const loadSongsFromServer = () => {
     sendAjax('GET', '/getSongs', null, (data) => {
         ReactDOM.render(
-            <SongList songs={data.songs} />, document.querySelector("#songs")
+            <SongList songs={data.songs} />, document.querySelector("#allT")
         );
     });
 };
@@ -289,7 +289,7 @@ const ArtistList = function(props) {
 const loadArtistsFromServer = () => {
     sendAjax('GET', '/getArtists', null, (data) => {
         ReactDOM.render(
-            <ArtistList artists={data.artists} />, document.querySelector("#artists")
+            <ArtistList artists={data.artists} />, document.querySelector("#allT")
         );
     });
 };
@@ -374,36 +374,84 @@ const AlbumList = function(props) {
 const loadAlbumsFromServer = () => {
     sendAjax('GET', '/getAlbums', null, (data) => {
         ReactDOM.render(
-            <AlbumList albums={data.albums} />, document.querySelector("#albums")
+            <AlbumList albums={data.albums} />, document.querySelector("#allT")
         );
     });
 };
 
-const setup = function(csrf) {
-    ReactDOM.render(
-        <SongForm csrf={csrf} />, document.querySelector("#makeSong")
-    );
-    ReactDOM.render(
-        <ArtistForm csrf={csrf} />, document.querySelector("#makeArtist")
-    );
-    ReactDOM.render(
-        <AlbumForm csrf={csrf} />, document.querySelector("#makeAlbum")
-    );
+const createMakeSong = (csrf) => {
+    ReactDOM.render(<SongForm csrf={csrf} />, document.querySelector("#make"));
+}
 
-    ReactDOM.render(
-        <SongList songs={[]} />, document.querySelector("#songs")
-    );
+const createMakeArtist = (csrf) => {
+    ReactDOM.render(<ArtistForm csrf={csrf} />, document.querySelector("#make"));
+}
 
-    ReactDOM.render(
-        <ArtistList artists={[]} />, document.querySelector("#artists")
-    );
-    ReactDOM.render(
-        <AlbumList albums={[]} />, document.querySelector("#albums")
-    );
+const createMakeAlbum = (csrf) => {
+    ReactDOM.render(<AlbumForm csrf={csrf} />, document.querySelector("#make"));
+}
 
+const createAllSong = (csrf) => {
+    ReactDOM.render(<SongList songs={[]} />, document.querySelector("#allT"));
     loadSongsFromServer();
+}
+
+const createAllArtist = (csrf) => {
+    ReactDOM.render(<ArtistList artists={[]} />, document.querySelector("#allT"));
     loadArtistsFromServer();
+}
+
+const createAllAlbum = (csrf) => {
+    ReactDOM.render(<AlbumList albums={[]} />, document.querySelector("#allT"));
     loadAlbumsFromServer();
+}
+
+const setup = function(csrf) {
+    const songButton = document.querySelector("#makeSong");
+    const artistButton = document.querySelector("#makeArtist");
+    const albumButton = document.querySelector("#makeAlbum");
+    const allSongButt = document.querySelector("#showSong");
+    const allArtistButt = document.querySelector("#showArtist");
+    const allAlbumButt = document.querySelector("#showAlbum");
+   
+    songButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createMakeSong(csrf);
+        return false;
+    })
+
+    artistButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createMakeArtist(csrf);
+        return false;
+    })
+
+    albumButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        createMakeAlbum(csrf);
+        return false;
+    })
+
+    allSongButt.addEventListener("click", (e) => {
+        e.preventDefault();
+        createAllSong(csrf);
+        
+        return false;
+    })
+
+    allArtistButt.addEventListener("click", (e) => {
+        e.preventDefault();
+        createAllArtist(csrf);
+        
+        return false;
+    })
+
+    allAlbumButt.addEventListener("click", (e) => {
+        e.preventDefault();
+        createAllAlbum(csrf);
+        
+        return false;
+    })
 };
 
 const getToken = () => {

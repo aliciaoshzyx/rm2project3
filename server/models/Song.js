@@ -71,6 +71,8 @@ SongSchema.statics.toAPI = (doc) => ({
   owner: doc.owner,
 });
 
+SongSchema.statics.findAll = (callback) => SongModel.find().exec(callback);
+
 SongSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),

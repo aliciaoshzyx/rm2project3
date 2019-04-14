@@ -36,6 +36,7 @@ AccountSchema.statics.toAPI = doc => ({
   _id: doc._id,
 });
 
+
 const validatePassword = (doc, password, callback) => {
   const pass = doc.password;
 

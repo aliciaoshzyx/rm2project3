@@ -6,6 +6,9 @@ const router = (app) => {
   app.get('/getSongs', mid.requiresLogin, controllers.Song.getSongs);
   app.get('/getArtists', mid.requiresLogin, controllers.Artist.getArtists);
   app.get('/getAlbums', mid.requiresLogin, controllers.Album.getAlbums);
+  app.get('/getAllSongs', mid.requiresLogin, controllers.Song.getSongs);
+  app.get('/getAllArtists', mid.requiresLogin, controllers.Artist.getArtists);
+  app.get('/getAllAlbums', mid.requiresLogin, controllers.Album.getAlbums);
   app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
@@ -16,6 +19,9 @@ const router = (app) => {
   app.post('/makerArtist', mid.requiresLogin, controllers.Artist.makeArtist);
   app.get('/makerAlbum', mid.requiresLogin, controllers.Album.makerPageAlbum);
   app.post('/makerAlbum', mid.requiresLogin, controllers.Album.makeAlbum);
+  app.get('/communitySong', mid.requiresLogin, controllers.Song.communityPageSong);
+  app.get('/communityAlbum', mid.requiresLogin, controllers.Album.communityPageAlbum);
+  app.get('/communityArtist', mid.requiresLogin, controllers.Artist.communityPageArtist);
   app.get('/changePass', mid.requiresLogin, controllers.Account.changePassPage);
   app.post('/changePass', mid.requiresLogin, controllers.Account.changePassword);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

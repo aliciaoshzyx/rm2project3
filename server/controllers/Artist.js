@@ -12,6 +12,16 @@ const makerPageArtist = (req, res) => {
   });
 };
 
+const communityPageArtist = (req, res) => {
+  Artist.ArtistModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+    return res.render('community', { csrfToken: req.csrfToken(), artists: docs });
+  });
+};
+
 const makeArtist = (req, res) => {
   console.log('in make Artist');
   console.log(req.body);
@@ -58,6 +68,22 @@ const getArtists = (request, response) => {
   });
 };
 
+const getAllArtists = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Artist.ArtistModel.findAll((err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.json({ artists: docs });
+  });
+};
+
 module.exports.makerPageArtist = makerPageArtist;
 module.exports.makeArtist = makeArtist;
 module.exports.getArtists = getArtists;
+module.exports.getAllArtists = getAllArtists;
+module.exports.communityPageArtist = communityPageArtist;
