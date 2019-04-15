@@ -15,10 +15,12 @@ const handleSong = (e) => {
     let link = '';
     let url = '';
     if($("#songArtist").val() == ''){
+        
         url = "https://itunes.apple.com/search?term=" + song;}else{
+        artist = $("#songArtist").val();
         url = "https://itunes.apple.com/search?term=" + song + "+" + artist;
     }
-
+    console.log(url);
     $.ajax({ 
         url: url, 
         async: false,
@@ -192,7 +194,7 @@ const SongForm = (props) => {
             <label htmlFor="songName">Song: </label>
             <input id="songName" type="text" name="songName" placeholder="Sugar"/>
             <label htmlFor="songArtist">Artist: </label>
-            <input id="songArtist" type="text" name="songsong" placeholder="Maroon 5"/>
+            <input id="songArtist" type="text" name="songArtist" placeholder="Maroon 5"/>
             <input id="songType" type="hidden" name="songType" value=''/>
             <input id="songAlbum" type="hidden" name="songAlbum" value=''/>
             <input id="songArt" type="hidden" name="songArt" value=''/>
@@ -216,7 +218,7 @@ const SongList = function(props) {
         return (
             <div key={song._id} className="song">
                 <h3 className="songName">Name: {song.name} </h3>
-                <h3 className="songArtist">song: {song.artist} </h3>
+                <h3 className="songArtist">Artist: {song.artist} </h3>
                 <h3 className="songType">Type: {song.type}</h3>
                 <h3 className="songAlbum">Album: {song.album}</h3>
                 <img className="songArt" src={song.art}/>

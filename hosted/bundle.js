@@ -17,11 +17,13 @@ var handleSong = function handleSong(e) {
     var link = '';
     var url = '';
     if ($("#songArtist").val() == '') {
+
         url = "https://itunes.apple.com/search?term=" + song;
     } else {
+        artist = $("#songArtist").val();
         url = "https://itunes.apple.com/search?term=" + song + "+" + artist;
     }
-
+    console.log(url);
     $.ajax({
         url: url,
         async: false,
@@ -201,7 +203,7 @@ var SongForm = function SongForm(props) {
             { htmlFor: "songArtist" },
             "Artist: "
         ),
-        React.createElement("input", { id: "songArtist", type: "text", name: "songsong", placeholder: "Maroon 5" }),
+        React.createElement("input", { id: "songArtist", type: "text", name: "songArtist", placeholder: "Maroon 5" }),
         React.createElement("input", { id: "songType", type: "hidden", name: "songType", value: "" }),
         React.createElement("input", { id: "songAlbum", type: "hidden", name: "songAlbum", value: "" }),
         React.createElement("input", { id: "songArt", type: "hidden", name: "songArt", value: "" }),
@@ -238,7 +240,7 @@ var SongList = function SongList(props) {
             React.createElement(
                 "h3",
                 { className: "songArtist" },
-                "song: ",
+                "Artist: ",
                 song.artist,
                 " "
             ),

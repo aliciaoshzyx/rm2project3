@@ -38,6 +38,7 @@ const makeAlbum = (req, res) => {
     tracks: JSON.parse(req.body.albumTracks),
     trackPrevs: JSON.parse(req.body.albumTrackPrev),
     owner: req.session.account._id,
+    user: req.session.account.username,
   };
 
   console.log(`data${JSON.stringify(albumData)}`);

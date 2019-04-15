@@ -24,7 +24,6 @@ const communityPageSong = (req, res) => {
 
 const makeSong = (req, res) => {
   console.log('in make song');
-  console.log(req.body);
   if (!req.body.songName) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
