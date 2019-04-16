@@ -14,6 +14,7 @@
     "build": "npm run buildLoginBundle && npm run buildAppBundle && npm run buildCommunity",
     "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
+    "watchCommunityBundle": "babel --watch ./client/community ./client/helper --presets react --out-file ./hosted/commun.js",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",

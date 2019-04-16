@@ -1,5 +1,60 @@
 "use strict";
 
+var handleComment = function handleComment(e) {
+    e.preventDefault();
+    console.log("in handlecomment");
+    $("#message").animate({ width: 'hide' }, 350);
+
+    if ($("#commentI").val() == '') {
+        handleError("All fields are required");
+        return false;
+    }
+    var body = $("#commentI").val();
+    var parentPost = $("#parentP").val();
+
+    console.log(body + " " + parentPost);
+
+    sendAjax('POST', $("#commentForm").attr("action"), $("#commentForm").serialize(), function () {
+        loadComments(parentPost);
+    });
+    return false;
+};
+
+var CommentList = function CommentList(props) {
+    if (props.comments.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "commentList" },
+            React.createElement("h3", { className: "emptyComment" })
+        );
+    }
+
+    var commentNodes = props.comments.map(function (comment) {
+        return React.createElement(
+            "div",
+            { key: comment._id, className: "comment" },
+            React.createElement(
+                "h3",
+                { className: "commentUser" },
+                "Added by: ",
+                comment.user
+            ),
+            React.createElement(
+                "h3",
+                { className: "commentBody" },
+                comment.body,
+                " "
+            )
+        );
+    });
+
+    return React.createElement(
+        "div",
+        { className: "commentList" },
+        commentNodes
+    );
+};
+
 var SongList = function SongList(props) {
     if (props.songs.length === 0) {
         return React.createElement(
@@ -12,11 +67,18 @@ var SongList = function SongList(props) {
             )
         );
     }
-
     var songNodes = props.songs.map(function (song) {
+        var idString = song._id + "comments";
+        idString = idString.replace(/\s+/g, '');
         return React.createElement(
             "div",
             { key: song._id, className: "song" },
+            React.createElement(
+                "h3",
+                { className: "songUser" },
+                "Added by: ",
+                song.user
+            ),
             React.createElement(
                 "h3",
                 { className: "songName" },
@@ -44,7 +106,20 @@ var SongList = function SongList(props) {
                 song.album
             ),
             React.createElement("img", { className: "songArt", src: song.art }),
-            React.createElement("audio", { classname: "songLink", controls: true, src: song.link })
+            React.createElement("audio", { classname: "songLink", controls: true, src: song.link }),
+            React.createElement(
+                "form",
+                { id: idString,
+                    onSubmit: handleComment,
+                    name: "commentForm",
+                    action: "/makeComment",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", id: "parentP", name: "parentPost", value: song._id }),
+                React.createElement("input", { "class": "commentI", id: "commentI", type: "text", name: "comment", placeholder: "Add Comment" }),
+                React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "commentSubmit", type: "submit", value: "Add Comment" })
+            ),
+            React.createElement("div", { className: "comments", id: idString })
         );
     });
 
@@ -58,6 +133,15 @@ var SongList = function SongList(props) {
 var loadAllSongsFromServer = function loadAllSongsFromServer() {
     sendAjax('GET', '/getAllSongs', null, function (data) {
         ReactDOM.render(React.createElement(SongList, { songs: data.songs }), document.querySelector("#all"));
+    });
+    loadComments();
+};
+
+var loadComments = function loadComments(parentP) {
+    var idString = parentP + "comments";
+    idString = idString.replace(/\s+/g, '');
+    sendAjax('GET', '/getComments', null, function (data) {
+        ReactDOM.render(React.createElement(CommentList, { comments: data.comments }), document.querySelector("#" + idString));
     });
 };
 
@@ -78,6 +162,12 @@ var ArtistList = function ArtistList(props) {
         return React.createElement(
             "div",
             { key: artist._id, className: "artist" },
+            React.createElement(
+                "h3",
+                { className: "artistUser" },
+                "Added by: ",
+                artist.user
+            ),
             React.createElement(
                 "h3",
                 { className: "artistName" },
@@ -145,6 +235,12 @@ var AlbumList = function AlbumList(props) {
         return React.createElement(
             "div",
             { key: album._id, className: "album" },
+            React.createElement(
+                "h3",
+                { className: "albumUser" },
+                "Added by: ",
+                album.user
+            ),
             React.createElement(
                 "h3",
                 { className: "albumName" },

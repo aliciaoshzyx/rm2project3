@@ -35,6 +35,11 @@ const ArtistSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  user: {
+    type: String,
+    required: true,
+  },
 });
 
 ArtistSchema.statics.toAPI = (doc) => ({
@@ -42,6 +47,8 @@ ArtistSchema.statics.toAPI = (doc) => ({
   link: doc.link,
   genere: doc.genere,
   owner: doc.owner,
+  id: doc._id,
+  user: doc.user,
 });
 
 ArtistSchema.statics.findAll = (callback) => ArtistSchema.find().exec(callback);
@@ -51,7 +58,17 @@ ArtistSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return ArtistModel.find(search).select('name link genere owner').exec(callback);
+  return ArtistModel.find(search).select('name link genere owner user').exec(callback);
+};
+
+ArtistSchema.statics.deleteArtist = (artistID, callback) => {
+  const search = {
+    _id: convertId(artistID),
+  };
+
+  ArtistModel.deleteOne(search, (err) => {
+    if (err) throw err;
+  }).exec(callback);
 };
 
 ArtistModel = mongoose.model('Artist', ArtistSchema);

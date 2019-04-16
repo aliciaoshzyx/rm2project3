@@ -27,7 +27,6 @@ const makeSong = (req, res) => {
   if (!req.body.songName) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
-  console.log(req);
   const songData = {
     name: req.body.songName,
     artist: req.body.songArtist,
@@ -36,9 +35,9 @@ const makeSong = (req, res) => {
     link: req.body.songLink,
     art: req.body.songArt,
     owner: req.session.account._id,
+    user: req.session.account.username,
   };
 
-  console.log(`data${JSON.stringify(songData)}`);
   const newSong = new Song.SongModel(songData);
 
   const songPromise = newSong.save();
@@ -56,7 +55,6 @@ const makeSong = (req, res) => {
 
   return songPromise;
 };
-
 
 
 const getSongs = (request, response) => {
@@ -87,8 +85,24 @@ const getAllSongs = (request, response) => {
   });
 };
 
+const deleteSong = (request, response) => {
+  const req = request;
+  const res = response;
+  if (!req.body.songID) {
+    return res.status(400).json({ error: 'An error occurred' });
+  }
+  return Song.SongModel.deleteSong(req.body.songID, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(202).json({ error: 'An error occured' });
+    }
+    return false;
+  });
+};
+
 module.exports.makerPageSong = makerPageSong;
 module.exports.makeSong = makeSong;
 module.exports.getSongs = getSongs;
 module.exports.getAllSongs = getAllSongs;
 module.exports.communityPageSong = communityPageSong;
+module.exports.deleteSong = deleteSong;

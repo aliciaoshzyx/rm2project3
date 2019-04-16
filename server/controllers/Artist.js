@@ -33,6 +33,7 @@ const makeArtist = (req, res) => {
     link: req.body.artistLink,
     genere: req.body.artistGenere,
     owner: req.session.account._id,
+    user: req.session.account.username,
   };
 
   console.log(`data${JSON.stringify(artistData)}`);
@@ -82,8 +83,24 @@ const getAllArtists = (request, response) => {
   });
 };
 
+const deleteArtist = (request, response) => {
+  const req = request;
+  const res = response;
+  if (!req.body.artistID) {
+    return res.status(400).json({ error: 'An error occurred' });
+  }
+  return Artist.ArtistModel.deleteArtist(req.body.artistID, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(202).json({ error: 'An error occured' });
+    }
+    return false;
+  });
+};
+
 module.exports.makerPageArtist = makerPageArtist;
 module.exports.makeArtist = makeArtist;
 module.exports.getArtists = getArtists;
 module.exports.getAllArtists = getAllArtists;
 module.exports.communityPageArtist = communityPageArtist;
+module.exports.deleteArtist = deleteArtist;

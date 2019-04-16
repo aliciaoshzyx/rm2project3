@@ -48,8 +48,8 @@ const handleSong = (e) => {
      $("#songArt").val(art);
      $("#songLink").val(link);
      sendAjax('POST', $("#songForm").attr("action"), $("#songForm").serialize(), function() {
-         
-        loadSongsFromServer();
+         console.log("in handlesong")
+        loadSongsFromServer($("#csrfValue").val());
     });
     $("#songName").val('');
     $("#songArtist").val('');
@@ -105,7 +105,7 @@ const handleArtist = (e) => {
      console.log("serial " + $("#artistForm").serialize());
      sendAjax('POST', $("#artistForm").attr("action"), $("#artistForm").serialize(), function() {
        
-        loadArtistsFromServer();
+        loadArtistsFromServer($("#csrfValue").val());
     });
     return false;
 };
@@ -162,23 +162,56 @@ const handleAlbum = (e) => {
                 if(result.results[i].wrapperType == "track"){
                     tracks.push(result.results[i].trackName);
                     trackPrevs.push(result.results[i].previewUrl);
-                    console.log(result.results[i].previewUrl);
                 }
             }
        }
     });
-    console.log(JSON.stringify(trackPrevs));
      $("#albumName").val(album);
      $("#albumArtist").val(artist);
      $("#albumGenere").val(genere);
      $("#albumArt").val(art);
      $("#albumTracks").val(JSON.stringify(tracks));
      $("#albumTrackPrev").val(JSON.stringify(trackPrevs));
-     console.log("serial " + $("#albumForm").serialize());
      sendAjax('POST', $("#albumForm").attr("action"), $("#albumForm").serialize(), function() {
        
-        loadAlbumsFromServer();
+        loadAlbumsFromServer($("#csrfValue").val());
     });
+    return false;
+};
+
+const handleDeleteSong = (e) => {
+    e.preventDefault();
+
+    $("#message").animate({width:'hide'}, 350);
+
+    sendAjax('POST', $(`#${e.target.id}`).attr("action"), $(`#${e.target.id}`).serialize(), function(){
+        
+    });
+    loadSongsFromServer($("#dcsrf").val());
+    return false;
+};
+
+const handleDeleteArtist = (e) => {
+    e.preventDefault();
+
+    $("#message").animate({width:'hide'}, 350);
+
+    sendAjax('POST', $(`#${e.target.id}`).attr("action"), $(`#${e.target.id}`).serialize(), function(){
+        
+    });
+    loadArtistsFromServer($("#dcsrf").val());
+    return false;
+};
+
+const handleDeleteAlbum = (e) => {
+    e.preventDefault();
+
+    $("#message").animate({width:'hide'}, 350);
+
+    sendAjax('POST', $(`#${e.target.id}`).attr("action"), $(`#${e.target.id}`).serialize(), function(){
+        
+    });
+    loadAlbumsFromServer($("#dcsrf").val());
     return false;
 };
 
@@ -199,7 +232,7 @@ const SongForm = (props) => {
             <input id="songAlbum" type="hidden" name="songAlbum" value=''/>
             <input id="songArt" type="hidden" name="songArt" value=''/>
             <input id="songLink" type="hidden" name="songLink" value=''/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input type="hidden" id="csrfValue" name="_csrf" value={props.csrf}/>
             <input className="makeSongSubmit" type="submit" value="Add song" />
         </form>
     )
@@ -215,6 +248,8 @@ const SongList = function(props) {
     }
 
     const songNodes = props.songs.map(function(song) {
+        let idString = `${song._id}deleteSongForm` ;
+        idString = idString.replace(/\s+/g, '');
         return (
             <div key={song._id} className="song">
                 <h3 className="songName">Name: {song.name} </h3>
@@ -223,6 +258,15 @@ const SongList = function(props) {
                 <h3 className="songAlbum">Album: {song.album}</h3>
                 <img className="songArt" src={song.art}/>
                 <audio classname="songLink" controls src={song.link}/>
+                <form id={idString} 
+                onSubmit={handleDeleteSong} 
+                name="deleteSongForm"
+                action="/deleteSong"
+                method="POST">
+                    <input type="hidden" name="songID" value ={song._id}/>
+                    <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
+                    <input id="deleteSubmit" type="submit" value="Delete Song"/>
+                </form>
             </div>
         );
     });
@@ -234,10 +278,10 @@ const SongList = function(props) {
     );
 };
 
-const loadSongsFromServer = () => {
+const loadSongsFromServer = (csrf) => {
     sendAjax('GET', '/getSongs', null, (data) => {
         ReactDOM.render(
-            <SongList songs={data.songs} />, document.querySelector("#allT")
+            <SongList songs={data.songs} csrf={csrf}/>, document.querySelector("#allT")
         );
     });
 };
@@ -255,7 +299,7 @@ const ArtistForm = (props) => {
             <input id="artistName" type="text" name="artistName" placeholder="Maroon 5"/>
             <input id="artistGenere" type="hidden" name="artistGenere" value=''/>
             <input id="artistLink" type="hidden" name="artistLink" value=''/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input type="hidden" id="csrfValue" name="_csrf" value={props.csrf}/>
             <input className="makeArtistSubmit" type="submit" value="Add artist" />
         </form>
     )
@@ -271,12 +315,21 @@ const ArtistList = function(props) {
     }
 
     const artistNodes = props.artists.map(function(artist) {
+        let idString = `${artist._id}deleteArtistForm` ;
+        idString = idString.replace(/\s+/g, '');
         return (
             <div key={artist._id} className="artist">
                 <h3 className="artistName">Name: {artist.name} </h3>
                 <h3 className="artistGenere">Genere: {artist.genere} </h3>
-                <iframe className="artistPage" src={artist.link}/>
-                
+                <form id={idString} 
+                onSubmit={handleDeleteArtist} 
+                name="deleteArtistForm"
+                action="/deleteArtist"
+                method="POST">
+                    <input type="hidden" name="artistID" value ={artist._id}/>
+                    <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
+                    <input id="deleteSubmit" type="submit" value="Delete Artist"/>
+                </form>
             </div>
         );
     });
@@ -288,10 +341,10 @@ const ArtistList = function(props) {
     );
 };
 
-const loadArtistsFromServer = () => {
+const loadArtistsFromServer = (csrf) => {
     sendAjax('GET', '/getArtists', null, (data) => {
         ReactDOM.render(
-            <ArtistList artists={data.artists} />, document.querySelector("#allT")
+            <ArtistList artists={data.artists} csrf={csrf}/>, document.querySelector("#allT")
         );
     });
 };
@@ -313,7 +366,7 @@ const AlbumForm = (props) => {
             <input id="albumTracks" type="hidden" name="albumTracks" value=""/>
             <input id="albumTrackPrev" type="hidden" name="albumTrackPrev" value=""/>
             <input id="albumArt" type="hidden" name="albumArt" value=''/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input type="hidden" id="csrfValue" name="_csrf" value={props.csrf}/>
             <input className="makeAlbumSubmit" type="submit" value="Add album" />
         </form>
     )
@@ -331,6 +384,8 @@ const AlbumList = function(props) {
 
 
     const albumNodes = props.albums.map(function(album) {
+        let idString = `${album._id}deleteAlbumForm` ;
+        idString = idString.replace(/\s+/g, '');
         const trackNodes = album.tracks.map(function(track) {
             return (
                 <div className="track">
@@ -361,7 +416,15 @@ const AlbumList = function(props) {
                 <div className="prevList">
                     {trackPrevNodes}
                 </div>
-                
+                <form id={idString} 
+                onSubmit={handleDeleteAlbum} 
+                name="deleteAlbumForm"
+                action="/deleteAlbum"
+                method="POST">
+                    <input type="hidden" name="albumID" value ={album._id}/>
+                    <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
+                    <input id="deleteSubmit" type="submit" value="Delete Album"/>
+                </form>
             </div>
         );
     });
@@ -373,10 +436,10 @@ const AlbumList = function(props) {
     );
 };
 
-const loadAlbumsFromServer = () => {
+const loadAlbumsFromServer = (csrf) => {
     sendAjax('GET', '/getAlbums', null, (data) => {
         ReactDOM.render(
-            <AlbumList albums={data.albums} />, document.querySelector("#allT")
+            <AlbumList albums={data.albums} csrf={csrf}/>, document.querySelector("#allT")
         );
     });
 };
@@ -394,18 +457,18 @@ const createMakeAlbum = (csrf) => {
 }
 
 const createAllSong = (csrf) => {
-    ReactDOM.render(<SongList songs={[]} />, document.querySelector("#allT"));
-    loadSongsFromServer();
+    ReactDOM.render(<SongList songs={[]} csrf={csrf}/>, document.querySelector("#allT"));
+    loadSongsFromServer(csrf);
 }
 
 const createAllArtist = (csrf) => {
-    ReactDOM.render(<ArtistList artists={[]} />, document.querySelector("#allT"));
-    loadArtistsFromServer();
+    ReactDOM.render(<ArtistList artists={[]} csrf={csrf}/>, document.querySelector("#allT"));
+    loadArtistsFromServer(csrf);
 }
 
 const createAllAlbum = (csrf) => {
-    ReactDOM.render(<AlbumList albums={[]} />, document.querySelector("#allT"));
-    loadAlbumsFromServer();
+    ReactDOM.render(<AlbumList albums={[]} csrf={csrf}/>, document.querySelector("#allT"));
+    loadAlbumsFromServer(csrf);
 }
 
 const setup = function(csrf) {
@@ -454,6 +517,8 @@ const setup = function(csrf) {
         
         return false;
     })
+
+    loadSongsFromServer(csrf);
 };
 
 const getToken = () => {

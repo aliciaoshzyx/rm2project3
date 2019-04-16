@@ -42,7 +42,7 @@ const AlbumSchema = new mongoose.Schema({
 
   upvotes: {
     type: Number,
-    required: true,
+    required: false,
     default: 0,
   },
 
@@ -56,6 +56,11 @@ const AlbumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  user: {
+    type: String,
+    required: true,
+  },
 });
 
 AlbumSchema.statics.toAPI = (doc) => ({
@@ -66,6 +71,7 @@ AlbumSchema.statics.toAPI = (doc) => ({
   tracks: doc.tracks,
   trackPrevs: doc.trackPrev,
   owner: doc.owner,
+  user: doc.user,
 });
 
 AlbumSchema.statics.findAll = (callback) => AlbumModel.find().exec(callback);
@@ -75,8 +81,19 @@ AlbumSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return AlbumModel.find(search).select('name artist art genere tracks trackPrevs owner').exec(callback);
+  return AlbumModel.find(search).select('name artist art genere tracks trackPrevs owner user').exec(callback);
 };
+
+AlbumSchema.statics.deleteAlbum = (albumID, callback) => {
+  const search = {
+    _id: convertId(albumID),
+  };
+
+  AlbumModel.deleteOne(search, (err) => {
+    if (err) throw err;
+  }).exec(callback);
+};
+
 
 AlbumModel = mongoose.model('Album', AlbumSchema);
 

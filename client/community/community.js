@@ -1,3 +1,48 @@
+const handleComment = (e) => {
+    e.preventDefault();
+    console.log("in handlecomment");
+    $("#message").animate({width:'hide'}, 350);
+
+    if($("#commentI").val() == ''){
+        handleError("All fields are required");
+        return false;
+    }
+    let body = $("#commentI").val();
+    let parentPost =  $("#parentP").val();
+
+    console.log(body + " " + parentPost)
+
+     sendAjax('POST', $("#commentForm").attr("action"), $("#commentForm").serialize(), function() {
+        loadComments(parentPost);
+    });
+    return false;
+};
+
+const CommentList = function(props) {
+    if(props.comments.length === 0){
+        return (
+            <div className="commentList">
+                <h3 className="emptyComment"></h3>
+            </div>
+        );
+    }
+
+    const commentNodes = props.comments.map(function(comment) {
+        return (
+            <div key={comment._id} className="comment">
+                <h3 className="commentUser">Added by: {comment.user}</h3>
+                <h3 className="commentBody">{comment.body} </h3>
+            </div>
+        );
+    });
+
+    return (
+        <div className="commentList">
+            {commentNodes}
+        </div>
+    );
+}
+
 const SongList = function(props) {
     if(props.songs.length === 0){
         return (
@@ -6,16 +51,31 @@ const SongList = function(props) {
             </div>
         );
     }
-
     const songNodes = props.songs.map(function(song) {
+        let idString = `${song._id}comments` ;
+        idString = idString.replace(/\s+/g, '');
         return (
             <div key={song._id} className="song">
+                <h3 className="songUser">Added by: {song.user}</h3>
                 <h3 className="songName">Name: {song.name} </h3>
                 <h3 className="songArtist">song: {song.artist} </h3>
                 <h3 className="songType">Type: {song.type}</h3>
                 <h3 className="songAlbum">Album: {song.album}</h3>
                 <img className="songArt" src={song.art}/>
                 <audio classname="songLink" controls src={song.link}/>
+                <form id={idString} 
+                onSubmit={handleComment} 
+                name="commentForm"
+                action="/makeComment"
+                method="POST">
+                    <input type="hidden" id="parentP" name="parentPost" value ={song._id}/>
+                    <input class="commentI" id="commentI" type="text" name="comment" placeholder= "Add Comment"/>
+                    <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
+                    <input id="commentSubmit" type="submit" value="Add Comment"/>
+                </form>
+                <div className="comments" id={idString}>
+
+                </div>
             </div>
         );
     });
@@ -30,10 +90,21 @@ const SongList = function(props) {
 const loadAllSongsFromServer = () => {
     sendAjax('GET', '/getAllSongs', null, (data) => {
         ReactDOM.render(
-            <SongList songs={data.songs} />, document.querySelector("#all")
+            <SongList songs={data.songs}/>, document.querySelector("#all")
         );
     });
+    loadComments();
 };
+
+const loadComments = (parentP) => {
+    let idString = `${parentP}comments` ;
+    idString = idString.replace(/\s+/g, '');
+    sendAjax('GET', '/getComments', null, (data) => {
+        ReactDOM.render(
+            <CommentList comments={data.comments} />, document.querySelector(`#${idString}`)
+        );
+    });
+}
 
 const ArtistList = function(props) {
     if(props.artists.length === 0){
@@ -47,6 +118,7 @@ const ArtistList = function(props) {
     const artistNodes = props.artists.map(function(artist) {
         return (
             <div key={artist._id} className="artist">
+                <h3 className="artistUser">Added by: {artist.user}</h3>
                 <h3 className="artistName">Name: {artist.name} </h3>
                 <h3 className="artistGenere">Genere: {artist.genere} </h3>
                 <iframe className="artistPage" src={artist.link}/>
@@ -100,6 +172,7 @@ const AlbumList = function(props) {
         
         return (
             <div key={album._id} className="album">
+                <h3 className="albumUser">Added by: {album.user}</h3>
                 <h3 className="albumName">Name: {album.name} </h3>
                 <h3 className="albumArtist">Artist:{album.artist}</h3>
                 <img className="albumArt" src={album.art}/>

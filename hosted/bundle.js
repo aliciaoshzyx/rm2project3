@@ -49,8 +49,8 @@ var handleSong = function handleSong(e) {
     $("#songArt").val(art);
     $("#songLink").val(link);
     sendAjax('POST', $("#songForm").attr("action"), $("#songForm").serialize(), function () {
-
-        loadSongsFromServer();
+        console.log("in handlesong");
+        loadSongsFromServer($("#csrfValue").val());
     });
     $("#songName").val('');
     $("#songArtist").val('');
@@ -105,7 +105,7 @@ var handleArtist = function handleArtist(e) {
     console.log("serial " + $("#artistForm").serialize());
     sendAjax('POST', $("#artistForm").attr("action"), $("#artistForm").serialize(), function () {
 
-        loadArtistsFromServer();
+        loadArtistsFromServer($("#csrfValue").val());
     });
     return false;
 };
@@ -162,23 +162,50 @@ var handleAlbum = function handleAlbum(e) {
                 if (result.results[i].wrapperType == "track") {
                     tracks.push(result.results[i].trackName);
                     trackPrevs.push(result.results[i].previewUrl);
-                    console.log(result.results[i].previewUrl);
                 }
             }
         }
     });
-    console.log(JSON.stringify(trackPrevs));
     $("#albumName").val(album);
     $("#albumArtist").val(artist);
     $("#albumGenere").val(genere);
     $("#albumArt").val(art);
     $("#albumTracks").val(JSON.stringify(tracks));
     $("#albumTrackPrev").val(JSON.stringify(trackPrevs));
-    console.log("serial " + $("#albumForm").serialize());
     sendAjax('POST', $("#albumForm").attr("action"), $("#albumForm").serialize(), function () {
 
-        loadAlbumsFromServer();
+        loadAlbumsFromServer($("#csrfValue").val());
     });
+    return false;
+};
+
+var handleDeleteSong = function handleDeleteSong(e) {
+    e.preventDefault();
+
+    $("#message").animate({ width: 'hide' }, 350);
+
+    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
+    loadSongsFromServer($("#dcsrf").val());
+    return false;
+};
+
+var handleDeleteArtist = function handleDeleteArtist(e) {
+    e.preventDefault();
+
+    $("#message").animate({ width: 'hide' }, 350);
+
+    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
+    loadArtistsFromServer($("#dcsrf").val());
+    return false;
+};
+
+var handleDeleteAlbum = function handleDeleteAlbum(e) {
+    e.preventDefault();
+
+    $("#message").animate({ width: 'hide' }, 350);
+
+    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
+    loadAlbumsFromServer($("#dcsrf").val());
     return false;
 };
 
@@ -208,7 +235,7 @@ var SongForm = function SongForm(props) {
         React.createElement("input", { id: "songAlbum", type: "hidden", name: "songAlbum", value: "" }),
         React.createElement("input", { id: "songArt", type: "hidden", name: "songArt", value: "" }),
         React.createElement("input", { id: "songLink", type: "hidden", name: "songLink", value: "" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", id: "csrfValue", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeSongSubmit", type: "submit", value: "Add song" })
     );
 };
@@ -227,6 +254,8 @@ var SongList = function SongList(props) {
     }
 
     var songNodes = props.songs.map(function (song) {
+        var idString = song._id + "deleteSongForm";
+        idString = idString.replace(/\s+/g, '');
         return React.createElement(
             "div",
             { key: song._id, className: "song" },
@@ -257,7 +286,18 @@ var SongList = function SongList(props) {
                 song.album
             ),
             React.createElement("img", { className: "songArt", src: song.art }),
-            React.createElement("audio", { classname: "songLink", controls: true, src: song.link })
+            React.createElement("audio", { classname: "songLink", controls: true, src: song.link }),
+            React.createElement(
+                "form",
+                { id: idString,
+                    onSubmit: handleDeleteSong,
+                    name: "deleteSongForm",
+                    action: "/deleteSong",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", name: "songID", value: song._id }),
+                React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Song" })
+            )
         );
     });
 
@@ -268,9 +308,9 @@ var SongList = function SongList(props) {
     );
 };
 
-var loadSongsFromServer = function loadSongsFromServer() {
+var loadSongsFromServer = function loadSongsFromServer(csrf) {
     sendAjax('GET', '/getSongs', null, function (data) {
-        ReactDOM.render(React.createElement(SongList, { songs: data.songs }), document.querySelector("#allT"));
+        ReactDOM.render(React.createElement(SongList, { songs: data.songs, csrf: csrf }), document.querySelector("#allT"));
     });
 };
 
@@ -292,7 +332,7 @@ var ArtistForm = function ArtistForm(props) {
         React.createElement("input", { id: "artistName", type: "text", name: "artistName", placeholder: "Maroon 5" }),
         React.createElement("input", { id: "artistGenere", type: "hidden", name: "artistGenere", value: "" }),
         React.createElement("input", { id: "artistLink", type: "hidden", name: "artistLink", value: "" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", id: "csrfValue", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeArtistSubmit", type: "submit", value: "Add artist" })
     );
 };
@@ -311,6 +351,8 @@ var ArtistList = function ArtistList(props) {
     }
 
     var artistNodes = props.artists.map(function (artist) {
+        var idString = artist._id + "deleteArtistForm";
+        idString = idString.replace(/\s+/g, '');
         return React.createElement(
             "div",
             { key: artist._id, className: "artist" },
@@ -328,7 +370,17 @@ var ArtistList = function ArtistList(props) {
                 artist.genere,
                 " "
             ),
-            React.createElement("iframe", { className: "artistPage", src: artist.link })
+            React.createElement(
+                "form",
+                { id: idString,
+                    onSubmit: handleDeleteArtist,
+                    name: "deleteArtistForm",
+                    action: "/deleteArtist",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", name: "artistID", value: artist._id }),
+                React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Artist" })
+            )
         );
     });
 
@@ -339,9 +391,9 @@ var ArtistList = function ArtistList(props) {
     );
 };
 
-var loadArtistsFromServer = function loadArtistsFromServer() {
+var loadArtistsFromServer = function loadArtistsFromServer(csrf) {
     sendAjax('GET', '/getArtists', null, function (data) {
-        ReactDOM.render(React.createElement(ArtistList, { artists: data.artists }), document.querySelector("#allT"));
+        ReactDOM.render(React.createElement(ArtistList, { artists: data.artists, csrf: csrf }), document.querySelector("#allT"));
     });
 };
 
@@ -371,7 +423,7 @@ var AlbumForm = function AlbumForm(props) {
         React.createElement("input", { id: "albumTracks", type: "hidden", name: "albumTracks", value: "" }),
         React.createElement("input", { id: "albumTrackPrev", type: "hidden", name: "albumTrackPrev", value: "" }),
         React.createElement("input", { id: "albumArt", type: "hidden", name: "albumArt", value: "" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", id: "csrfValue", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeAlbumSubmit", type: "submit", value: "Add album" })
     );
 };
@@ -390,6 +442,8 @@ var AlbumList = function AlbumList(props) {
     }
 
     var albumNodes = props.albums.map(function (album) {
+        var idString = album._id + "deleteAlbumForm";
+        idString = idString.replace(/\s+/g, '');
         var trackNodes = album.tracks.map(function (track) {
             return React.createElement(
                 "div",
@@ -443,6 +497,17 @@ var AlbumList = function AlbumList(props) {
                 "div",
                 { className: "prevList" },
                 trackPrevNodes
+            ),
+            React.createElement(
+                "form",
+                { id: idString,
+                    onSubmit: handleDeleteAlbum,
+                    name: "deleteAlbumForm",
+                    action: "/deleteAlbum",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", name: "albumID", value: album._id }),
+                React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Album" })
             )
         );
     });
@@ -454,9 +519,9 @@ var AlbumList = function AlbumList(props) {
     );
 };
 
-var loadAlbumsFromServer = function loadAlbumsFromServer() {
+var loadAlbumsFromServer = function loadAlbumsFromServer(csrf) {
     sendAjax('GET', '/getAlbums', null, function (data) {
-        ReactDOM.render(React.createElement(AlbumList, { albums: data.albums }), document.querySelector("#allT"));
+        ReactDOM.render(React.createElement(AlbumList, { albums: data.albums, csrf: csrf }), document.querySelector("#allT"));
     });
 };
 
@@ -473,18 +538,18 @@ var createMakeAlbum = function createMakeAlbum(csrf) {
 };
 
 var createAllSong = function createAllSong(csrf) {
-    ReactDOM.render(React.createElement(SongList, { songs: [] }), document.querySelector("#allT"));
-    loadSongsFromServer();
+    ReactDOM.render(React.createElement(SongList, { songs: [], csrf: csrf }), document.querySelector("#allT"));
+    loadSongsFromServer(csrf);
 };
 
 var createAllArtist = function createAllArtist(csrf) {
-    ReactDOM.render(React.createElement(ArtistList, { artists: [] }), document.querySelector("#allT"));
-    loadArtistsFromServer();
+    ReactDOM.render(React.createElement(ArtistList, { artists: [], csrf: csrf }), document.querySelector("#allT"));
+    loadArtistsFromServer(csrf);
 };
 
 var createAllAlbum = function createAllAlbum(csrf) {
-    ReactDOM.render(React.createElement(AlbumList, { albums: [] }), document.querySelector("#allT"));
-    loadAlbumsFromServer();
+    ReactDOM.render(React.createElement(AlbumList, { albums: [], csrf: csrf }), document.querySelector("#allT"));
+    loadAlbumsFromServer(csrf);
 };
 
 var setup = function setup(csrf) {
@@ -533,6 +598,8 @@ var setup = function setup(csrf) {
 
         return false;
     });
+
+    loadSongsFromServer(csrf);
 };
 
 var getToken = function getToken() {
