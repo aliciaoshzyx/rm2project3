@@ -36,6 +36,7 @@ const makeSong = (req, res) => {
     art: req.body.songArt,
     owner: req.session.account._id,
     user: req.session.account.username,
+    comments: [],
   };
 
   const newSong = new Song.SongModel(songData);
@@ -100,9 +101,20 @@ const deleteSong = (request, response) => {
   });
 };
 
+const updateCommentsSong = (request, response) => {
+  const req = request;
+  const res = response;
+  console.log("ucs " + JSON.stringify(req.body));
+  if(!req.body.comment){
+    return res.status(400).json({ error: 'An error occurred' });
+  }
+  return Song.SongModel.updateComments(req.body.parentPost, req.body.comment)
+}
+
 module.exports.makerPageSong = makerPageSong;
 module.exports.makeSong = makeSong;
 module.exports.getSongs = getSongs;
 module.exports.getAllSongs = getAllSongs;
 module.exports.communityPageSong = communityPageSong;
 module.exports.deleteSong = deleteSong;
+module.exports.updateCommentsSong = updateCommentsSong;

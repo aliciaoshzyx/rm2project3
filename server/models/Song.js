@@ -64,6 +64,11 @@ const SongSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  comments : [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Comment'
+  }]
 });
 
 SongSchema.statics.toAPI = (doc) => ({
@@ -76,6 +81,7 @@ SongSchema.statics.toAPI = (doc) => ({
   owner: doc.owner,
   _id: doc._id,
   user: doc.user,
+  comments: doc.comments
 });
 
 SongSchema.statics.findAll = (callback) => SongModel.find().exec(callback);
@@ -85,8 +91,15 @@ SongSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return SongModel.find(search).select('name artist type album link art owner user').exec(callback);
+  return SongModel.find(search).select('name artist comments type album link art owner user').exec(callback);
 };
+
+SongSchema.statics.updateComments = (songID, comment, callback) => {
+  const search = { _id: convertId(songID)};
+  SongModel.findOneAndUpdate(search,
+    { $push: { comments: comment } }).exec(callback);
+  
+}
 
 SongSchema.statics.deleteSong = (songID, callback) => {
   const search = {

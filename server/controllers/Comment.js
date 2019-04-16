@@ -25,12 +25,12 @@ const communityPageComments = (req, res) => {
 const makeComment = (req, res) => {
   console.log('in make comment');
   console.log(req.body);
-  if (!req.body.body || !req.body.parentPost) {
+  if (!req.body.comment || !req.body.parentPost) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
   const commentData = {
-    body: req.body.body,
-    parentPost: req.body.ParentPost,
+    com: req.body.comment,
+    parentPost: req.body.parentPost,
     owner: req.session.account._id,
     user: req.session.account.username,
   };
@@ -40,9 +40,13 @@ const makeComment = (req, res) => {
 
   const commentPromise = newComment.save();
 
-  commentPromise.then(() => res.json({ redirect: '/makerComment' }));
+  commentPromise.then(() => {
+    req.session.comment = Comment.CommentModel.toAPI(newComment);
+    return res.json({ redirect: '/makerCOmment' });
+   });
 
   commentPromise.catch((err) => {
+    console.log("in error");
     console.log(err);
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Comment already exists.' });
@@ -71,13 +75,11 @@ const makeComment = (req, res) => {
 const getComments = (request, response) => {
   const req = request;
   const res = response;
-
-  return Comment.CommentModel.findByPost(req.body.parentPost, (err, docs) => {
+  return Comment.CommentModel.findByPost(req.query.parentPost, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-
     return res.json({ comments: docs });
   });
 };

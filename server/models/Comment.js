@@ -8,7 +8,7 @@ const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
 const CommentSchema = new mongoose.Schema({
-  body: {
+  com: {
     type: String,
     required: true,
   },
@@ -36,7 +36,7 @@ const CommentSchema = new mongoose.Schema({
 });
 
 CommentSchema.statics.toAPI = (doc) => ({
-  body: doc.body,
+  com: doc.com,
   parentPost: doc.parentPost,
   owner: doc.owner,
   id: doc._id,

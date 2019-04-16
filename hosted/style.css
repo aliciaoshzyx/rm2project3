@@ -47,6 +47,9 @@ nav:nth-child(1) {
     background-color: #66bdff;
 }
 
+.song {
+    border: 2px solid #338acc;
+}
 .domoForm {
     border: 2px solid #338acc;
     height: 35px;
