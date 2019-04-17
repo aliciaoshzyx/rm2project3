@@ -6,9 +6,9 @@ const router = (app) => {
   app.get('/getSongs', mid.requiresLogin, controllers.Song.getSongs);
   app.get('/getArtists', mid.requiresLogin, controllers.Artist.getArtists);
   app.get('/getAlbums', mid.requiresLogin, controllers.Album.getAlbums);
-  app.get('/getAllSongs', mid.requiresLogin, controllers.Song.getSongs);
-  app.get('/getAllArtists', mid.requiresLogin, controllers.Artist.getArtists);
-  app.get('/getAllAlbums', mid.requiresLogin, controllers.Album.getAlbums);
+  app.get('/getAllSongs', mid.requiresLogin, controllers.Song.getAllSongs);
+  app.get('/getAllArtists', mid.requiresLogin, controllers.Artist.getAllArtists);
+  app.get('/getAllAlbums', mid.requiresLogin, controllers.Album.getAllAlbums);
   app.get('/getComments', mid.requiresLogin, controllers.Comment.getComments);
   app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);

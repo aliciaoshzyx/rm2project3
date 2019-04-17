@@ -80,7 +80,7 @@ const getAllSongs = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-
+    console.log("ss " + docs);
     return res.json({ songs: docs });
   });
 };

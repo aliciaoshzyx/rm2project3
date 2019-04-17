@@ -23,7 +23,6 @@ var handleSong = function handleSong(e) {
         artist = $("#songArtist").val();
         url = "https://itunes.apple.com/search?term=" + song + "+" + artist;
     }
-    console.log(url);
     $.ajax({
         url: url,
         async: false,
@@ -49,7 +48,7 @@ var handleSong = function handleSong(e) {
     $("#songArt").val(art);
     $("#songLink").val(link);
     sendAjax('POST', $("#songForm").attr("action"), $("#songForm").serialize(), function () {
-        console.log("in handlesong");
+
         loadSongsFromServer($("#csrfValue").val());
     });
     $("#songName").val('');
@@ -60,7 +59,6 @@ var handleSong = function handleSong(e) {
 
 var handleArtist = function handleArtist(e) {
     e.preventDefault();
-    console.log("in handleartist");
     $("#message").animate({ width: 'hide' }, 350);
 
     if ($("#artistName").val() == '') {
@@ -86,7 +84,7 @@ var handleArtist = function handleArtist(e) {
 
     });
     url = "https://itunes.apple.com/lookup?id=" + artId;
-    console.log(url);
+
     $.ajax({
         url: url,
         async: false,
@@ -98,11 +96,9 @@ var handleArtist = function handleArtist(e) {
         }
     });
 
-    console.log(genere);
     $("#artistName").val(artist);
     $("#artistGenere").val(genere);
     $("#artistLink").val(link);
-    console.log("serial " + $("#artistForm").serialize());
     sendAjax('POST', $("#artistForm").attr("action"), $("#artistForm").serialize(), function () {
 
         loadArtistsFromServer($("#csrfValue").val());
@@ -112,7 +108,6 @@ var handleArtist = function handleArtist(e) {
 
 var handleAlbum = function handleAlbum(e) {
     e.preventDefault();
-    console.log("in handlealbum");
     $("#message").animate({ width: 'hide' }, 350);
 
     if ($("#albumName").val() == '') {
@@ -151,7 +146,7 @@ var handleAlbum = function handleAlbum(e) {
 
     });
     url = "https://itunes.apple.com/lookup?id=" + albId + "&entity=song";
-    console.log(url);
+
     $.ajax({
         url: url,
         async: false,
