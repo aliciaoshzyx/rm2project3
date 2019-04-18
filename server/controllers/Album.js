@@ -23,7 +23,6 @@ const communityPageAlbum = (req, res) => {
 };
 
 const makeAlbum = (req, res) => {
-  console.log('in make Album');
   if (!req.body.albumName) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
@@ -37,6 +36,7 @@ const makeAlbum = (req, res) => {
     trackPrevs: JSON.parse(req.body.albumTrackPrev),
     owner: req.session.account._id,
     user: req.session.account.username,
+    upvotes: req.body.upvotes,
   };
 
   const newAlbum = new Album.AlbumModel(albumData);
@@ -85,6 +85,24 @@ const getAllAlbums = (request, response) => {
   });
 };
 
+const updateUpvotes = (request, response) => {
+  const req = request;
+  const res = response;
+  
+  let up = parseInt(req.body.upvotes);
+  const albumID = req.body.albumID;
+  console.log(up);
+  return Album.AlbumModel.updateUpvotes(albumID, up, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.json({albums :docs});
+  });
+
+}
+
 const deleteAlbum = (request, response) => {
   const req = request;
   const res = response;
@@ -106,3 +124,4 @@ module.exports.getAlbums = getAlbums;
 module.exports.getAllAlbums = getAllAlbums;
 module.exports.communityPageAlbum = communityPageAlbum;
 module.exports.deleteAlbum = deleteAlbum;
+module.exports.updateAlbumUpvotes = updateUpvotes;

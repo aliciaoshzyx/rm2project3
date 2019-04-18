@@ -92,7 +92,6 @@ const handleArtist = (e) => {
         dataType: 'json',
         success:(result) => {
              genere = result.results[0].primaryGenreName;
-             console.log(result.results[0].primaryGenreName);
        }
     });
 

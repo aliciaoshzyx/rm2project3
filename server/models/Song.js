@@ -65,6 +65,11 @@ const SongSchema = new mongoose.Schema({
     required: true,
   },
 
+  upvotes: {
+    type: Number,
+    required: true,
+    default: 0,
+  }
   
 });
 
@@ -78,18 +83,26 @@ SongSchema.statics.toAPI = (doc) => ({
   owner: doc.owner,
   _id: doc._id,
   user: doc.user,
+  upvotes : doc.upvotes
 });
 
-SongSchema.statics.findAll = (callback) => SongModel.find().exec(callback);
+SongSchema.statics.findAll = (callback) => SongModel.find().sort({upvotes: -1}).exec(callback);
 
 SongSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
 
-  return SongModel.find(search).select('name artist comments type album link art owner user').exec(callback);
+  return SongModel.find(search).select('name artist comments type album link art owner user upvotes').exec(callback);
 };
 
+SongSchema.statics.updateUpvotes = (songID, upvotes, callback) => {
+  const search = {
+    _id: convertId(songID),
+  };
+  SongModel.findOneAndUpdate(search, {$inc : {"upvotes" : 1}}, {sort: {upvotes : -1}}).exec(callback);
+  return SongModel.find().sort({upvotes: -1});
+}
 
 SongSchema.statics.deleteSong = (songID, callback) => {
   const search = {

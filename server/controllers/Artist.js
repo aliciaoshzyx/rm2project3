@@ -23,8 +23,6 @@ const communityPageArtist = (req, res) => {
 };
 
 const makeArtist = (req, res) => {
-  console.log('in make Artist');
-  console.log(req.body);
   if (!req.body.artistName) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
@@ -34,9 +32,9 @@ const makeArtist = (req, res) => {
     genere: req.body.artistGenere,
     owner: req.session.account._id,
     user: req.session.account.username,
+    upvotes: req.body.upvotes,
   };
 
-  console.log(`data${JSON.stringify(artistData)}`);
   const newArtist = new Artist.ArtistModel(artistData);
 
   const artistPromise = newArtist.save();
@@ -83,6 +81,24 @@ const getAllArtists = (request, response) => {
   });
 };
 
+const updateUpvotes = (request, response) => {
+  const req = request;
+  const res = response;
+  
+  let up = parseInt(req.body.upvotes);
+  const artistID = req.body.artistID;
+  console.log(up);
+  return Artist.ArtistModel.updateUpvotes(artistID, up, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.json({artists :docs});
+  });
+
+}
+
 const deleteArtist = (request, response) => {
   const req = request;
   const res = response;
@@ -104,3 +120,4 @@ module.exports.getArtists = getArtists;
 module.exports.getAllArtists = getAllArtists;
 module.exports.communityPageArtist = communityPageArtist;
 module.exports.deleteArtist = deleteArtist;
+module.exports.updateArtistUpvotes = updateUpvotes;

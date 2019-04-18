@@ -9,8 +9,6 @@ var handleLogin = function handleLogin(e) {
         handleError("RAWR! Username or password is empty");
     }
 
-    console.log($("input[name=_csrf]").val());
-
     sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
 
     return false;
@@ -133,7 +131,6 @@ var createSignupWindow = function createSignupWindow(csrf) {
 };
 
 var createPassWindow = function createPassWindow(csrf) {
-    console.log(csrf);
     ReactDOM.render(React.createElement(PasswordWindow, { csrf: csrf }), document.querySelector("#content"));
 };
 

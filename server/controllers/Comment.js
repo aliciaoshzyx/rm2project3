@@ -23,8 +23,6 @@ const communityPageComments = (req, res) => {
 };
 
 const makeComment = (req, res) => {
-  console.log('in make comment');
-  console.log(req.body);
   if (!req.body.comment || !req.body.parentPost) {
     return res.status(400).json({ error: 'Not all required fields filled' });
   }
@@ -35,7 +33,6 @@ const makeComment = (req, res) => {
     user: req.session.account.username,
   };
 
-  console.log(`data${JSON.stringify(commentData)}`);
   const newComment = new Comment.CommentModel(commentData);
 
   const commentPromise = newComment.save();
@@ -46,7 +43,6 @@ const makeComment = (req, res) => {
    });
 
   commentPromise.catch((err) => {
-    console.log("in error");
     console.log(err);
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Comment already exists.' });
@@ -58,19 +54,6 @@ const makeComment = (req, res) => {
   return commentPromise;
 };
 
-// const getComments = (request, response) => {
-//   const req = request;
-//   const res = response;
-
-//   return Artist.ArtistModel.findByOwner(req.session.account._id, (err, docs) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(400).json({ error: 'An error occured' });
-//     }
-
-//     return res.json({ artists: docs });
-//   });
-// };
 
 const getComments = (request, response) => {
   const req = request;
@@ -84,24 +67,8 @@ const getComments = (request, response) => {
   });
 };
 
-// const deleteArtist = (request, response) => {
-//   const req = request;
-//   const res = response;
-//   if (!req.body.artistID) {
-//     return res.status(400).json({ error: 'An error occurred' });
-//   }
-//   return Artist.ArtistModel.deleteArtist(req.body.artistID, (err, docs) => {
-//     if (err) {
-//       console.log(err);
-//       return res.status(202).json({ error: 'An error occured' });
-//     }
-//     return false;
-//   });
-// };
 
 module.exports.makerPageComment = makerPageComment;
 module.exports.makeComment = makeComment;
 module.exports.getComments = getComments;
-// /module.exports.getAllArtists = getAllArtists;
 module.exports.communityPageComments = communityPageComments;
-// module.exports.deleteArtist = deleteArtist;

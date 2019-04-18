@@ -29,7 +29,11 @@ const router = (app) => {
   app.post('/deleteSong', mid.requiresSecure, mid.requiresLogin, controllers.Song.deleteSong);
   app.post('/deleteArtist', mid.requiresSecure, mid.requiresLogin, controllers.Artist.deleteArtist);
   app.post('/deleteAlbum', mid.requiresSecure, mid.requiresLogin, controllers.Album.deleteAlbum);
+  app.post('/updateSongUpvotes', mid.requiresLogin, controllers.Song.updateSongUpvotes);
+  app.post('/updateAlbumUpvotes', mid.requiresLogin, controllers.Album.updateAlbumUpvotes);
+  app.post('/updateArtistUpvotes', mid.requiresLogin, controllers.Artist.updateArtistUpvotes);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  //app.get('/*', mid.requiresSecure)
 };
 
 module.exports = router;

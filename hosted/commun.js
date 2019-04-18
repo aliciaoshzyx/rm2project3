@@ -2,7 +2,6 @@
 
 var handleComment = function handleComment(e) {
     e.preventDefault();
-    console.log("in handlecomment");
     var postid = e.target.id;
     var inputId = postid.substr(0, 33) + "I";
     $("#message").animate({ width: 'hide' }, 350);
@@ -18,14 +17,26 @@ var handleComment = function handleComment(e) {
     var parentPost = $("#" + ppId).val();
 
     var csrf = $("#ccsrf").val();
-    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {
-        console.log("suc");
-    });
+    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
 
     loadComments(parentPost, csrf);
     return false;
 };
 
+var handleUpvote = function handleUpvote(e) {
+    e.preventDefault();
+    console.log("in handle upvote");
+    console.log(e.target.id);
+    $("#" + e.target.id + " :input").prop("readonly", true);
+    sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
+    if ($("#" + e.target.id).attr("action") == "/updateSongUpvotes") {
+        loadAllSongsFromServer($("ccsrf").val());
+    } else if ($("#" + e.target.id).attr("action") == '/updateAlbumUpvotes') {
+        loadAllAlbumsFromServer($("ccsrf").val());
+    } else if ($("#" + e.target.id).attr("action") == '/updateArtistUpvotes') {
+        loadAllArtistsFromServer($("ccsrf").val());
+    }
+};
 var CommentList = function CommentList(props) {
     if (props.comments.length === 0) {
         return React.createElement(
@@ -66,6 +77,7 @@ var CommentList = function CommentList(props) {
 };
 
 var SongList = function SongList(props) {
+
     if (props.songs.length === 0) {
         return React.createElement(
             "div",
@@ -82,6 +94,8 @@ var SongList = function SongList(props) {
         var idString2 = "c" + song._id + "comments";
         var idString3 = "c" + song._id + "commentsI";
         var idString4 = "c" + song._id + "pp";
+        var idString5 = "c" + song._id + "up";
+        var idString6 = "c" + song._id + "ups";
         idString = idString.replace(/\s+/g, '');
         return React.createElement(
             "div",
@@ -121,6 +135,23 @@ var SongList = function SongList(props) {
             React.createElement("img", { className: "songArt", src: song.art }),
             React.createElement("audio", { classname: "songLink", controls: true, src: song.link }),
             React.createElement(
+                "h3",
+                { className: "songUpvotes" },
+                song.upvotes
+            ),
+            React.createElement(
+                "form",
+                { id: idString5,
+                    onSubmit: handleUpvote,
+                    name: "upvoteForm",
+                    action: "/updateSongUpvotes",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", id: idString5, name: "songID", value: song._id }),
+                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: song.upvotes }),
+                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
+            ),
+            React.createElement(
                 "form",
                 { id: idString,
                     onSubmit: handleComment,
@@ -155,8 +186,6 @@ var loadAllSongsFromServer = function loadAllSongsFromServer(csrf) {
 };
 
 var loadComments = function loadComments(parentP, csrf) {
-    console.log("in load comments");
-    console.log(parentP);
     var idString = "c" + parentP + "comments";
     var d = {
         parentPost: parentP
@@ -185,6 +214,8 @@ var ArtistList = function ArtistList(props) {
         var idString2 = "c" + artist._id + "comments";
         var idString3 = "c" + artist._id + "commentsI";
         var idString4 = "c" + artist._id + "pp";
+        var idString5 = "c" + artist._id + "up";
+        var idString6 = "c" + artist._id + "ups";
         return React.createElement(
             "div",
             { key: artist._id, className: "artist" },
@@ -208,7 +239,23 @@ var ArtistList = function ArtistList(props) {
                 artist.genere,
                 " "
             ),
-            React.createElement("iframe", { className: "artistPage", src: artist.link }),
+            React.createElement(
+                "h3",
+                { className: "artistUpvotes" },
+                artist.upvotes
+            ),
+            React.createElement(
+                "form",
+                { id: idString5,
+                    onSubmit: handleUpvote,
+                    name: "upvoteForm",
+                    action: "/updateArtistUpvotes",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", id: idString5, name: "artistID", value: artist._id }),
+                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: artist.upvotes }),
+                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
+            ),
             React.createElement(
                 "form",
                 { id: idString,
@@ -260,6 +307,8 @@ var AlbumList = function AlbumList(props) {
         var idString2 = "c" + album._id + "comments";
         var idString3 = "c" + album._id + "commentsI";
         var idString4 = "c" + album._id + "pp";
+        var idString5 = "c" + album._id + "up";
+        var idString6 = "c" + album._id + "ups";
         var trackNodes = album.tracks.map(function (track) {
             return React.createElement(
                 "div",
@@ -319,6 +368,23 @@ var AlbumList = function AlbumList(props) {
                 "div",
                 { className: "prevList" },
                 trackPrevNodes
+            ),
+            React.createElement(
+                "h3",
+                { classname: "albumUpvotes" },
+                album.upvotes
+            ),
+            React.createElement(
+                "form",
+                { id: idString5,
+                    onSubmit: handleUpvote,
+                    name: "upvoteForm",
+                    action: "/updateAlbumUpvotes",
+                    method: "POST" },
+                React.createElement("input", { type: "hidden", id: idString5, name: "albumID", value: album._id }),
+                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: album.upvotes }),
+                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
             ),
             React.createElement(
                 "form",

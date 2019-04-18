@@ -1,6 +1,5 @@
 const handleComment = (e) => {
     e.preventDefault();
-    console.log("in handlecomment");
     let postid = e.target.id;
     let inputId = postid.substr(0,33) + "I";
     $("#message").animate({width:'hide'}, 350);
@@ -17,7 +16,7 @@ const handleComment = (e) => {
     
     let csrf = $("#ccsrf").val();
     sendAjax('POST', $(`#${e.target.id}`).attr("action"), $(`#${e.target.id}`).serialize(), function() {
-        console.log("suc");
+        
         
     });
 
@@ -25,6 +24,22 @@ const handleComment = (e) => {
     return false;
 };
 
+const handleUpvote = (e) => {
+    e.preventDefault();
+    console.log("in handle upvote");
+    console.log(e.target.id);
+    $(`#${e.target.id} :input`).prop("readonly", true);
+    sendAjax('POST', $(`#${e.target.id}`).attr("action"),  $(`#${e.target.id}`).serialize(), function() {
+   
+    });
+    if($(`#${e.target.id}`).attr("action") == "/updateSongUpvotes"){
+        loadAllSongsFromServer($("ccsrf").val());
+    } else if ($(`#${e.target.id}`).attr("action") == '/updateAlbumUpvotes'){
+        loadAllAlbumsFromServer($("ccsrf").val());
+    } else if ($(`#${e.target.id}`).attr("action") == '/updateArtistUpvotes'){
+        loadAllArtistsFromServer($("ccsrf").val());
+    }
+ }
 const CommentList = function(props) {
     if(props.comments.length === 0){
         return (
@@ -51,6 +66,7 @@ const CommentList = function(props) {
 }
 
 const SongList = function(props) {
+    
     if(props.songs.length === 0){
         return (
             <div className="songList">
@@ -62,7 +78,9 @@ const SongList = function(props) {
         let idString = `c${song._id}commentsform` ;
         let idString2 = `c${song._id}comments`;
         let idString3 = `c${song._id}commentsI`;
-        let idString4 = `c${song._id}pp`
+        let idString4 = `c${song._id}pp`;
+        let idString5 = `c${song._id}up`;
+        let idString6 = `c${song._id}ups`;
         idString = idString.replace(/\s+/g, '');
         return (
             <div key={song._id} className="song">
@@ -73,6 +91,17 @@ const SongList = function(props) {
                 <h3 className="songAlbum">Album: {song.album}</h3>
                 <img className="songArt" src={song.art}/>
                 <audio classname="songLink" controls src={song.link}/>
+                <h3 className="songUpvotes">{song.upvotes}</h3>
+                <form id={idString5} 
+                onSubmit={handleUpvote} 
+                name="upvoteForm"
+                action="/updateSongUpvotes"
+                method="POST">
+                    <input type="hidden" id={idString5} name="songID" value ={song._id}/>
+                    <input type="hidden" id={idString6} name="upvotes" value={song.upvotes}/>
+                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
+                </form>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
@@ -114,8 +143,6 @@ const loadAllSongsFromServer = (csrf) => {
 };
 
 const loadComments = (parentP, csrf) => {
-    console.log("in load comments");
-    console.log(parentP);
     let idString = `c${parentP}comments` ;
     let d = {
         parentPost: parentP,
@@ -142,13 +169,25 @@ const ArtistList = function(props) {
         let idString = `c${artist._id}commentsform` ;
         let idString2 = `c${artist._id}comments`;
         let idString3 = `c${artist._id}commentsI`;
-        let idString4 = `c${artist._id}pp`
+        let idString4 = `c${artist._id}pp`;
+        let idString5 = `c${artist._id}up`;
+        let idString6 = `c${artist._id}ups`;
         return (
             <div key={artist._id} className="artist">
                 <h3 className="artistUser">Added by: {artist.user}</h3>
                 <h3 className="artistName">Name: {artist.name} </h3>
                 <h3 className="artistGenere">Genere: {artist.genere} </h3>
-                <iframe className="artistPage" src={artist.link}/>
+                <h3 className="artistUpvotes">{artist.upvotes}</h3>
+                <form id={idString5} 
+                onSubmit={handleUpvote} 
+                name="upvoteForm"
+                action="/updateArtistUpvotes"
+                method="POST">
+                    <input type="hidden" id={idString5} name="artistID" value ={artist._id}/>
+                    <input type="hidden" id={idString6} name="upvotes" value={artist.upvotes}/>
+                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
+                </form>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
@@ -201,7 +240,9 @@ const AlbumList = function(props) {
         let idString = `c${album._id}commentsform` ;
         let idString2 = `c${album._id}comments`;
         let idString3 = `c${album._id}commentsI`;
-        let idString4 = `c${album._id}pp`
+        let idString4 = `c${album._id}pp`;
+        let idString5 = `c${album._id}up`;
+        let idString6 = `c${album._id}ups`;
         const trackNodes = album.tracks.map(function(track) {
             return (
                 <div className="track">
@@ -233,6 +274,17 @@ const AlbumList = function(props) {
                 <div className="prevList">
                     {trackPrevNodes}
                 </div>
+                <h3 classname="albumUpvotes">{album.upvotes}</h3>
+                <form id={idString5} 
+                onSubmit={handleUpvote} 
+                name="upvoteForm"
+                action="/updateAlbumUpvotes"
+                method="POST">
+                    <input type="hidden" id={idString5} name="albumID" value ={album._id}/>
+                    <input type="hidden" id={idString6} name="upvotes" value={album.upvotes}/>
+                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
+                </form>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
