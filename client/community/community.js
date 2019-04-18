@@ -70,7 +70,7 @@ const SongList = function(props) {
     if(props.songs.length === 0){
         return (
             <div className="songList">
-                <h3 className="emptySong">No Entries Yet</h3>
+                <h3 className="emptySong">No Songs Yet</h3>
             </div>
         );
     }
@@ -160,7 +160,7 @@ const ArtistList = function(props) {
     if(props.artists.length === 0){
         return (
             <div className="artistList">
-                <h3 className="emptyArtist">No Entries Yet</h3>
+                <h3 className="emptyArtist">No Artists Yet</h3>
             </div>
         );
     }
@@ -229,7 +229,7 @@ const AlbumList = function(props) {
     if(props.albums.length === 0){
         return (
             <div className="albumList">
-                <h3 className="emptyAlbum">No Entries Yet</h3>
+                <h3 className="emptyAlbum">No Albums Yet</h3>
             </div>
         );
     }

@@ -242,7 +242,7 @@ var SongList = function SongList(props) {
             React.createElement(
                 "h3",
                 { className: "emptySong" },
-                "No Entries Yet"
+                "No Songs Yet"
             )
         );
     }
@@ -339,7 +339,7 @@ var ArtistList = function ArtistList(props) {
             React.createElement(
                 "h3",
                 { className: "emptyArtist" },
-                "No Entries Yet"
+                "No Artists Yet"
             )
         );
     }
@@ -430,7 +430,7 @@ var AlbumList = function AlbumList(props) {
             React.createElement(
                 "h3",
                 { className: "emptyAlbum" },
-                "No Entries Yet"
+                "No Albums Yet"
             )
         );
     }
