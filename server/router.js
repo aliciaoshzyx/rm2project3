@@ -33,7 +33,7 @@ const router = (app) => {
   app.post('/updateAlbumUpvotes', mid.requiresLogin, controllers.Album.updateAlbumUpvotes);
   app.post('/updateArtistUpvotes', mid.requiresLogin, controllers.Artist.updateArtistUpvotes);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  //app.get('/*', mid.requiresSecure)
+  // app.get('/*', mid.requiresSecure)
 };
 
 module.exports = router;

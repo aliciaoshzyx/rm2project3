@@ -72,7 +72,6 @@ const getAlbums = (request, response) => {
 };
 
 const getAllAlbums = (request, response) => {
-  const req = request;
   const res = response;
 
   return Album.AlbumModel.findAll((err, docs) => {
@@ -88,8 +87,8 @@ const getAllAlbums = (request, response) => {
 const updateUpvotes = (request, response) => {
   const req = request;
   const res = response;
-  
-  let up = parseInt(req.body.upvotes);
+
+  const up = parseInt(req.body.upvotes, 10);
   const albumID = req.body.albumID;
   console.log(up);
   return Album.AlbumModel.updateUpvotes(albumID, up, (err, docs) => {
@@ -98,10 +97,9 @@ const updateUpvotes = (request, response) => {
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({albums :docs});
+    return res.json({ albums: docs });
   });
-
-}
+};
 
 const deleteAlbum = (request, response) => {
   const req = request;
@@ -114,7 +112,7 @@ const deleteAlbum = (request, response) => {
       console.log(err);
       return res.status(202).json({ error: 'An error occured' });
     }
-    return false;
+    return docs;
   });
 };
 

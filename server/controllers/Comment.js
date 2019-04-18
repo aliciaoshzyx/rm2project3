@@ -37,10 +37,7 @@ const makeComment = (req, res) => {
 
   const commentPromise = newComment.save();
 
-  commentPromise.then(() => {
-    req.session.comment = Comment.CommentModel.toAPI(newComment);
-    return res.json({ redirect: '/makerCOmment' });
-   });
+  commentPromise.then(() => res.json({ redirect: '/makerComment' }));
 
   commentPromise.catch((err) => {
     console.log(err);

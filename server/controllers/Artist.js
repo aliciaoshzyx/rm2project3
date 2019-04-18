@@ -68,7 +68,6 @@ const getArtists = (request, response) => {
 };
 
 const getAllArtists = (request, response) => {
-  const req = request;
   const res = response;
 
   return Artist.ArtistModel.findAll((err, docs) => {
@@ -84,8 +83,8 @@ const getAllArtists = (request, response) => {
 const updateUpvotes = (request, response) => {
   const req = request;
   const res = response;
-  
-  let up = parseInt(req.body.upvotes);
+
+  const up = parseInt(req.body.upvotes, 10);
   const artistID = req.body.artistID;
   console.log(up);
   return Artist.ArtistModel.updateUpvotes(artistID, up, (err, docs) => {
@@ -94,10 +93,9 @@ const updateUpvotes = (request, response) => {
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({artists :docs});
+    return res.json({ artists: docs });
   });
-
-}
+};
 
 const deleteArtist = (request, response) => {
   const req = request;
@@ -110,7 +108,7 @@ const deleteArtist = (request, response) => {
       console.log(err);
       return res.status(202).json({ error: 'An error occured' });
     }
-    return false;
+    return docs;
   });
 };
 

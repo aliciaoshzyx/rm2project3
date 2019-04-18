@@ -72,7 +72,6 @@ const getSongs = (request, response) => {
 };
 
 const getAllSongs = (request, response) => {
-  const req = request;
   const res = response;
 
   return Song.SongModel.findAll((err, docs) => {
@@ -88,8 +87,8 @@ const getAllSongs = (request, response) => {
 const updateUpvotes = (request, response) => {
   const req = request;
   const res = response;
-  
-  let up = parseInt(req.body.upvotes);
+
+  const up = parseInt(req.body.upvotes, 10);
   const songID = req.body.songID;
   console.log(up);
   return Song.SongModel.updateUpvotes(songID, up, (err, docs) => {
@@ -98,10 +97,9 @@ const updateUpvotes = (request, response) => {
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({songs :docs});
+    return res.json({ songs: docs });
   });
-
-}
+};
 
 const deleteSong = (request, response) => {
   const req = request;
@@ -114,7 +112,7 @@ const deleteSong = (request, response) => {
       console.log(err);
       return res.status(202).json({ error: 'An error occured' });
     }
-    return false;
+    return docs;
   });
 };
 

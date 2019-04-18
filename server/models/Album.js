@@ -75,23 +75,25 @@ AlbumSchema.statics.toAPI = (doc) => ({
   upvotes: doc.upvotes,
 });
 
-AlbumSchema.statics.findAll = (callback) => AlbumModel.find().sort({upvotes: -1}).exec(callback);
+AlbumSchema.statics.findAll = (callback) => AlbumModel.find().sort({ upvotes: -1 }).exec(callback);
 
 AlbumSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
 
-  return AlbumModel.find(search).select('name artist art genere tracks trackPrevs owner user').exec(callback);
+  return AlbumModel.find(search)
+  .select('name artist art genere tracks trackPrevs owner user').exec(callback);
 };
 
 AlbumSchema.statics.updateUpvotes = (albumID, upvotes, callback) => {
   const search = {
     _id: convertId(albumID),
   };
-  AlbumModel.findOneAndUpdate(search, {$inc : {"upvotes" : 1}}, {sort: {upvotes : -1}}).exec(callback);
-  return AlbumModel.find().sort({upvotes: -1});
-}
+  AlbumModel.findOneAndUpdate(search, { $inc: { upvotes: 1 } },
+    { sort: { upvotes: -1 } }).exec(callback);
+  return AlbumModel.find().sort({ upvotes: -1 });
+};
 
 AlbumSchema.statics.deleteAlbum = (albumID, callback) => {
   const search = {

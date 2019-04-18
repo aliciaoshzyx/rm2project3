@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const _ = require('underscore');
 
 let CommentModel = {};
 
 const convertId = mongoose.Types.ObjectId;
-const setName = (name) => _.escape(name).trim();
 
 const CommentSchema = new mongoose.Schema({
   com: {
@@ -53,7 +51,8 @@ CommentSchema.statics.findByOwner = (ownerId, callback) => {
   return CommentModel.find(search).select('body parentPost owner id user').exec(callback);
 };
 
-CommentSchema.statics.findByPost = (parentPost, callback) => CommentModel.find({ parentPost }).exec(callback);
+CommentSchema.statics.findByPost = (parentPost, callback) =>
+CommentModel.find({ parentPost }).exec(callback);
 
 // CommentSchema.statics.deleteComment = (artistID, callback) => {
 

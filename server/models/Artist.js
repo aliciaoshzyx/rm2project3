@@ -45,7 +45,7 @@ const ArtistSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
-  }
+  },
 });
 
 ArtistSchema.statics.toAPI = (doc) => ({
@@ -58,7 +58,8 @@ ArtistSchema.statics.toAPI = (doc) => ({
   upvotes: doc.upvotes,
 });
 
-ArtistSchema.statics.findAll = (callback) => ArtistModel.find().sort({upvotes: -1}).exec(callback);
+ArtistSchema.statics.findAll = (callback) => ArtistModel.find()
+.sort({ upvotes: -1 }).exec(callback);
 
 ArtistSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
@@ -72,9 +73,10 @@ ArtistSchema.statics.updateUpvotes = (artistID, upvotes, callback) => {
   const search = {
     _id: convertId(artistID),
   };
-  ArtistModel.findOneAndUpdate(search, {$inc : {"upvotes" : 1}}, {sort: {upvotes : -1}}).exec(callback);
-  return ArtistModel.find().sort({upvotes: -1});
-}
+  ArtistModel.findOneAndUpdate(search, { $inc: { upvotes: 1 } },
+    { sort: { upvotes: -1 } }).exec(callback);
+  return ArtistModel.find().sort({ upvotes: -1 });
+};
 
 ArtistSchema.statics.deleteArtist = (artistID, callback) => {
   const search = {
