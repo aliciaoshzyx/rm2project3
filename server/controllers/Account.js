@@ -110,7 +110,7 @@ const changePassword = (request, response) => {
         console.log(err);
         return res.status(400).json({ error: 'An error occured' });
       }
-      return res.json({ redirect: '/logout' });
+      res.redirect( '/logout' );
     }));
   }
   return false;
