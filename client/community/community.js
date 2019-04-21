@@ -85,23 +85,25 @@ const SongList = function(props) {
         return (
             <div key={song._id} className="song">
                 <h3 className="songUser">Added by: {song.user}</h3>
-                <h3 className="songName">Name: {song.name} </h3>
-                <h3 className="songArtist">song: {song.artist} </h3>
-                <h3 className="songType">Type: {song.type}</h3>
-                <h3 className="songAlbum">Album: {song.album}</h3>
+                <h3 className="songType">{song.type}</h3>
                 <img className="songArt" src={song.art}/>
+                <h3 className="songName">{song.name} </h3>
+                <h3 className="songArtist">{song.artist}</h3>
+                <h3 className="songAlbum">{song.album}</h3> 
                 <audio classname="songLink" controls src={song.link}/>
-                <h3 className="songUpvotes">{song.upvotes}</h3>
-                <form id={idString5} 
-                onSubmit={handleUpvote} 
-                name="upvoteForm"
-                action="/updateSongUpvotes"
-                method="POST">
-                    <input type="hidden" id={idString5} name="songID" value ={song._id}/>
-                    <input type="hidden" id={idString6} name="upvotes" value={song.upvotes}/>
-                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
-                </form>
+                <div className="upvotesSection">
+                    <h3 className="songUpvotes">{song.upvotes}</h3>
+                    <form id={idString5} 
+                    onSubmit={handleUpvote} 
+                    name="upvoteForm"
+                    action="/updateSongUpvotes"
+                    method="POST">
+                        <input type="hidden" id={idString5} name="songID" value ={song._id}/>
+                        <input type="hidden" id={idString6} name="upvotes" value={song.upvotes}/>
+                        <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                        <input className="upvoteSubmit" type="submit" value="Upvote"/>
+                    </form>
+                </div>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
@@ -110,7 +112,7 @@ const SongList = function(props) {
                     <input type="hidden" id={idString4} name="parentPost" value ={song._id}/>
                     <input class="commentI" id={idString3} type="text" name="comment" placeholder= "Add Comment"/>
                     <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="commentSubmit" type="submit" value="Add Comment"/>
+                    <input className="commentSubmit" type="submit" value="Add Comment"/>
                 </form>
                 <div className="comments" id={idString2}>
 
@@ -175,19 +177,21 @@ const ArtistList = function(props) {
         return (
             <div key={artist._id} className="artist">
                 <h3 className="artistUser">Added by: {artist.user}</h3>
-                <h3 className="artistName">Name: {artist.name} </h3>
-                <h3 className="artistGenere">Genere: {artist.genere} </h3>
-                <h3 className="artistUpvotes">{artist.upvotes}</h3>
-                <form id={idString5} 
-                onSubmit={handleUpvote} 
-                name="upvoteForm"
-                action="/updateArtistUpvotes"
-                method="POST">
-                    <input type="hidden" id={idString5} name="artistID" value ={artist._id}/>
-                    <input type="hidden" id={idString6} name="upvotes" value={artist.upvotes}/>
-                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
-                </form>
+                <h3 className="artistName">{artist.name} </h3>
+                <h3 className="artistGenere">{artist.genere} </h3>
+                <div className="upvotesSection">
+                    <h3 className="artistUpvotes">{artist.upvotes}</h3>
+                    <form id={idString5} 
+                    onSubmit={handleUpvote} 
+                    name="upvoteForm"
+                    action="/updateArtistUpvotes"
+                    method="POST">
+                        <input type="hidden" id={idString5} name="artistID" value ={artist._id}/>
+                        <input type="hidden" id={idString6} name="upvotes" value={artist.upvotes}/>
+                        <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                        <input className="upvoteSubmit" type="submit" value="Upvote"/>
+                    </form>
+                </div>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
@@ -196,7 +200,7 @@ const ArtistList = function(props) {
                     <input type="hidden" id={idString4} name="parentPost" value ={artist._id}/>
                     <input class="commentI" id={idString3} type="text" name="comment" placeholder= "Add Comment"/>
                     <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="commentSubmit" type="submit" value="Add Comment"/>
+                    <input className="commentSubmit" type="submit" value="Add Comment"/>
                 </form>
                 <div className="comments" id={idString2}>
 
@@ -263,28 +267,36 @@ const AlbumList = function(props) {
         return (
             <div key={album._id} className="album">
                 <h3 className="albumUser">Added by: {album.user}</h3>
-                <h3 className="albumName">Name: {album.name} </h3>
-                <h3 className="albumArtist">Artist:{album.artist}</h3>
+                <div className="topSection">
                 <img className="albumArt" src={album.art}/>
-                <h3 className="albumGenere">Genere: {album.genere} </h3>
-                
+                <div>
+                    <h3 className="albumName">{album.name} </h3>
+                    <h3 className="albumArtist">{album.artist}</h3>
+                    <h3 className="albumGenere">Genre: {album.genere} </h3>
+                </div>
+            </div>
+            <h3>Tracklist:</h3>
+            <div className= "albumSongs">
                 <div className="trackList">
                     {trackNodes}
                 </div>
                 <div className="prevList">
                     {trackPrevNodes}
                 </div>
-                <h3 classname="albumUpvotes">{album.upvotes}</h3>
-                <form id={idString5} 
-                onSubmit={handleUpvote} 
-                name="upvoteForm"
-                action="/updateAlbumUpvotes"
-                method="POST">
-                    <input type="hidden" id={idString5} name="albumID" value ={album._id}/>
-                    <input type="hidden" id={idString6} name="upvotes" value={album.upvotes}/>
-                    <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="upvoteSubmit" type="submit" value="Upvote"/>
-                </form>
+                </div>
+                <div className="upvotesSection">
+                    <h3 className="albumUpvotes">{album.upvotes}</h3>
+                    <form id={idString5} 
+                    onSubmit={handleUpvote} 
+                    name="upvoteForm"
+                    action="/updateAlbumUpvotes"
+                    method="POST">
+                        <input type="hidden" id={idString5} name="albumID" value ={album._id}/>
+                        <input type="hidden" id={idString6} name="upvotes" value={album.upvotes}/>
+                        <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
+                        <input className="upvoteSubmit" type="submit" value="Upvote"/>
+                    </form>
+                </div>
                 <form id={idString} 
                 onSubmit={handleComment} 
                 name="commentForm"
@@ -293,7 +305,7 @@ const AlbumList = function(props) {
                     <input type="hidden" id={idString4} name="parentPost" value ={album._id}/>
                     <input class="commentI" id={idString3} type="text" name="comment" placeholder= "Add Comment"/>
                     <input type="hidden" id="ccsrf" name="_csrf" value={props.csrf}/>
-                    <input id="commentSubmit" type="submit" value="Add Comment"/>
+                    <input className="commentSubmit" type="submit" value="Add Comment"/>
                 </form>
                 <div className="comments" id={idString2}>
 

@@ -246,11 +246,11 @@ const SongList = function(props) {
         idString = idString.replace(/\s+/g, '');
         return (
             <div key={song._id} className="song">
-                <h3 className="songName">Name: {song.name} </h3>
-                <h3 className="songArtist">Artist: {song.artist} </h3>
-                <h3 className="songType">Type: {song.type}</h3>
-                <h3 className="songAlbum">Album: {song.album}</h3>
+                <h3 className="songType">{song.type}</h3>
                 <img className="songArt" src={song.art}/>
+                <h3 className="songName">{song.name} </h3>
+                <h3 className="songArtist">{song.artist}</h3>
+                <h3 className="songAlbum">{song.album}</h3> 
                 <audio classname="songLink" controls src={song.link}/>
                 <form id={idString} 
                 onSubmit={handleDeleteSong} 
@@ -259,7 +259,7 @@ const SongList = function(props) {
                 method="POST">
                     <input type="hidden" name="songID" value ={song._id}/>
                     <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
-                    <input id="deleteSubmit" type="submit" value="Delete Song"/>
+                    <input className="deleteSubmit" type="submit" value="Delete Song"/>
                 </form>
             </div>
         );
@@ -289,7 +289,7 @@ const ArtistForm = (props) => {
             method="POST"
             className="artistForm"
         >
-            <label htmlFor="artistName">artist: </label>
+            <label htmlFor="artistName">Artist: </label>
             <input id="artistName" type="text" name="artistName" placeholder="Maroon 5"/>
             <input id="artistGenere" type="hidden" name="artistGenere" value=''/>
             <input id="artistLink" type="hidden" name="artistLink" value=''/>
@@ -313,8 +313,8 @@ const ArtistList = function(props) {
         idString = idString.replace(/\s+/g, '');
         return (
             <div key={artist._id} className="artist">
-                <h3 className="artistName">Name: {artist.name} </h3>
-                <h3 className="artistGenere">Genere: {artist.genere} </h3>
+                <h3 className="artistName">{artist.name} </h3>
+                <h3 className="artistGenere">{artist.genere} </h3>
                 <form id={idString} 
                 onSubmit={handleDeleteArtist} 
                 name="deleteArtistForm"
@@ -322,7 +322,7 @@ const ArtistList = function(props) {
                 method="POST">
                     <input type="hidden" name="artistID" value ={artist._id}/>
                     <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
-                    <input id="deleteSubmit" type="submit" value="Delete Artist"/>
+                    <input className="deleteSubmit" type="submit" value="Delete Artist"/>
                 </form>
             </div>
         );
@@ -399,16 +399,22 @@ const AlbumList = function(props) {
         
         return (
             <div key={album._id} className="album">
-                <h3 className="albumName">Name: {album.name} </h3>
-                <h3 className="albumArtist">Artist:{album.artist}</h3>
-                <img className="albumArt" src={album.art}/>
-                <h3 className="albumGenere">Genere: {album.genere} </h3>
-                
+                <div className="topSection">
+                    <img className="albumArt" src={album.art}/>
+                    <div>
+                        <h3 className="albumName">{album.name} </h3>
+                        <h3 className="albumArtist">{album.artist}</h3>
+                        <h3 className="albumGenere">Genre: {album.genere} </h3>
+                    </div>
+                </div>
+                <h3>Tracklist:</h3>
+                <div className= "albumSongs">
                 <div className="trackList">
                     {trackNodes}
                 </div>
                 <div className="prevList">
                     {trackPrevNodes}
+                </div>
                 </div>
                 <form id={idString} 
                 onSubmit={handleDeleteAlbum} 
@@ -417,7 +423,7 @@ const AlbumList = function(props) {
                 method="POST">
                     <input type="hidden" name="albumID" value ={album._id}/>
                     <input type="hidden" id="dcsrf" name="_csrf" value={props.csrf}/>
-                    <input id="deleteSubmit" type="submit" value="Delete Album"/>
+                    <input className="deleteSubmit" type="submit" value="Delete Album"/>
                 </form>
             </div>
         );

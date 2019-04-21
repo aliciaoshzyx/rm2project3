@@ -108,48 +108,47 @@ var SongList = function SongList(props) {
             ),
             React.createElement(
                 "h3",
+                { className: "songType" },
+                song.type
+            ),
+            React.createElement("img", { className: "songArt", src: song.art }),
+            React.createElement(
+                "h3",
                 { className: "songName" },
-                "Name: ",
                 song.name,
                 " "
             ),
             React.createElement(
                 "h3",
                 { className: "songArtist" },
-                "song: ",
-                song.artist,
-                " "
-            ),
-            React.createElement(
-                "h3",
-                { className: "songType" },
-                "Type: ",
-                song.type
+                song.artist
             ),
             React.createElement(
                 "h3",
                 { className: "songAlbum" },
-                "Album: ",
                 song.album
             ),
-            React.createElement("img", { className: "songArt", src: song.art }),
             React.createElement("audio", { classname: "songLink", controls: true, src: song.link }),
             React.createElement(
-                "h3",
-                { className: "songUpvotes" },
-                song.upvotes
-            ),
-            React.createElement(
-                "form",
-                { id: idString5,
-                    onSubmit: handleUpvote,
-                    name: "upvoteForm",
-                    action: "/updateSongUpvotes",
-                    method: "POST" },
-                React.createElement("input", { type: "hidden", id: idString5, name: "songID", value: song._id }),
-                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: song.upvotes }),
-                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
+                "div",
+                { className: "upvotesSection" },
+                React.createElement(
+                    "h3",
+                    { className: "songUpvotes" },
+                    song.upvotes
+                ),
+                React.createElement(
+                    "form",
+                    { id: idString5,
+                        onSubmit: handleUpvote,
+                        name: "upvoteForm",
+                        action: "/updateSongUpvotes",
+                        method: "POST" },
+                    React.createElement("input", { type: "hidden", id: idString5, name: "songID", value: song._id }),
+                    React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: song.upvotes }),
+                    React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                    React.createElement("input", { className: "upvoteSubmit", type: "submit", value: "Upvote" })
+                )
             ),
             React.createElement(
                 "form",
@@ -161,7 +160,7 @@ var SongList = function SongList(props) {
                 React.createElement("input", { type: "hidden", id: idString4, name: "parentPost", value: song._id }),
                 React.createElement("input", { "class": "commentI", id: idString3, type: "text", name: "comment", placeholder: "Add Comment" }),
                 React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "commentSubmit", type: "submit", value: "Add Comment" })
+                React.createElement("input", { className: "commentSubmit", type: "submit", value: "Add Comment" })
             ),
             React.createElement("div", { className: "comments", id: idString2 })
         );
@@ -228,33 +227,35 @@ var ArtistList = function ArtistList(props) {
             React.createElement(
                 "h3",
                 { className: "artistName" },
-                "Name: ",
                 artist.name,
                 " "
             ),
             React.createElement(
                 "h3",
                 { className: "artistGenere" },
-                "Genere: ",
                 artist.genere,
                 " "
             ),
             React.createElement(
-                "h3",
-                { className: "artistUpvotes" },
-                artist.upvotes
-            ),
-            React.createElement(
-                "form",
-                { id: idString5,
-                    onSubmit: handleUpvote,
-                    name: "upvoteForm",
-                    action: "/updateArtistUpvotes",
-                    method: "POST" },
-                React.createElement("input", { type: "hidden", id: idString5, name: "artistID", value: artist._id }),
-                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: artist.upvotes }),
-                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
+                "div",
+                { className: "upvotesSection" },
+                React.createElement(
+                    "h3",
+                    { className: "artistUpvotes" },
+                    artist.upvotes
+                ),
+                React.createElement(
+                    "form",
+                    { id: idString5,
+                        onSubmit: handleUpvote,
+                        name: "upvoteForm",
+                        action: "/updateArtistUpvotes",
+                        method: "POST" },
+                    React.createElement("input", { type: "hidden", id: idString5, name: "artistID", value: artist._id }),
+                    React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: artist.upvotes }),
+                    React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                    React.createElement("input", { className: "upvoteSubmit", type: "submit", value: "Upvote" })
+                )
             ),
             React.createElement(
                 "form",
@@ -266,7 +267,7 @@ var ArtistList = function ArtistList(props) {
                 React.createElement("input", { type: "hidden", id: idString4, name: "parentPost", value: artist._id }),
                 React.createElement("input", { "class": "commentI", id: idString3, type: "text", name: "comment", placeholder: "Add Comment" }),
                 React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "commentSubmit", type: "submit", value: "Add Comment" })
+                React.createElement("input", { className: "commentSubmit", type: "submit", value: "Add Comment" })
             ),
             React.createElement("div", { className: "comments", id: idString2 })
         );
@@ -339,52 +340,71 @@ var AlbumList = function AlbumList(props) {
                 album.user
             ),
             React.createElement(
-                "h3",
-                { className: "albumName" },
-                "Name: ",
-                album.name,
-                " "
+                "div",
+                { className: "topSection" },
+                React.createElement("img", { className: "albumArt", src: album.art }),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "h3",
+                        { className: "albumName" },
+                        album.name,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "albumArtist" },
+                        album.artist
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "albumGenere" },
+                        "Genre: ",
+                        album.genere,
+                        " "
+                    )
+                )
             ),
             React.createElement(
                 "h3",
-                { className: "albumArtist" },
-                "Artist:",
-                album.artist
-            ),
-            React.createElement("img", { className: "albumArt", src: album.art }),
-            React.createElement(
-                "h3",
-                { className: "albumGenere" },
-                "Genere: ",
-                album.genere,
-                " "
+                null,
+                "Tracklist:"
             ),
             React.createElement(
                 "div",
-                { className: "trackList" },
-                trackNodes
+                { className: "albumSongs" },
+                React.createElement(
+                    "div",
+                    { className: "trackList" },
+                    trackNodes
+                ),
+                React.createElement(
+                    "div",
+                    { className: "prevList" },
+                    trackPrevNodes
+                )
             ),
             React.createElement(
                 "div",
-                { className: "prevList" },
-                trackPrevNodes
-            ),
-            React.createElement(
-                "h3",
-                { classname: "albumUpvotes" },
-                album.upvotes
-            ),
-            React.createElement(
-                "form",
-                { id: idString5,
-                    onSubmit: handleUpvote,
-                    name: "upvoteForm",
-                    action: "/updateAlbumUpvotes",
-                    method: "POST" },
-                React.createElement("input", { type: "hidden", id: idString5, name: "albumID", value: album._id }),
-                React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: album.upvotes }),
-                React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "upvoteSubmit", type: "submit", value: "Upvote" })
+                { className: "upvotesSection" },
+                React.createElement(
+                    "h3",
+                    { className: "albumUpvotes" },
+                    album.upvotes
+                ),
+                React.createElement(
+                    "form",
+                    { id: idString5,
+                        onSubmit: handleUpvote,
+                        name: "upvoteForm",
+                        action: "/updateAlbumUpvotes",
+                        method: "POST" },
+                    React.createElement("input", { type: "hidden", id: idString5, name: "albumID", value: album._id }),
+                    React.createElement("input", { type: "hidden", id: idString6, name: "upvotes", value: album.upvotes }),
+                    React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
+                    React.createElement("input", { className: "upvoteSubmit", type: "submit", value: "Upvote" })
+                )
             ),
             React.createElement(
                 "form",
@@ -396,7 +416,7 @@ var AlbumList = function AlbumList(props) {
                 React.createElement("input", { type: "hidden", id: idString4, name: "parentPost", value: album._id }),
                 React.createElement("input", { "class": "commentI", id: idString3, type: "text", name: "comment", placeholder: "Add Comment" }),
                 React.createElement("input", { type: "hidden", id: "ccsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "commentSubmit", type: "submit", value: "Add Comment" })
+                React.createElement("input", { className: "commentSubmit", type: "submit", value: "Add Comment" })
             ),
             React.createElement("div", { className: "comments", id: idString2 })
         );

@@ -255,31 +255,26 @@ var SongList = function SongList(props) {
             { key: song._id, className: "song" },
             React.createElement(
                 "h3",
+                { className: "songType" },
+                song.type
+            ),
+            React.createElement("img", { className: "songArt", src: song.art }),
+            React.createElement(
+                "h3",
                 { className: "songName" },
-                "Name: ",
                 song.name,
                 " "
             ),
             React.createElement(
                 "h3",
                 { className: "songArtist" },
-                "Artist: ",
-                song.artist,
-                " "
-            ),
-            React.createElement(
-                "h3",
-                { className: "songType" },
-                "Type: ",
-                song.type
+                song.artist
             ),
             React.createElement(
                 "h3",
                 { className: "songAlbum" },
-                "Album: ",
                 song.album
             ),
-            React.createElement("img", { className: "songArt", src: song.art }),
             React.createElement("audio", { classname: "songLink", controls: true, src: song.link }),
             React.createElement(
                 "form",
@@ -290,7 +285,7 @@ var SongList = function SongList(props) {
                     method: "POST" },
                 React.createElement("input", { type: "hidden", name: "songID", value: song._id }),
                 React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Song" })
+                React.createElement("input", { className: "deleteSubmit", type: "submit", value: "Delete Song" })
             )
         );
     });
@@ -321,7 +316,7 @@ var ArtistForm = function ArtistForm(props) {
         React.createElement(
             "label",
             { htmlFor: "artistName" },
-            "artist: "
+            "Artist: "
         ),
         React.createElement("input", { id: "artistName", type: "text", name: "artistName", placeholder: "Maroon 5" }),
         React.createElement("input", { id: "artistGenere", type: "hidden", name: "artistGenere", value: "" }),
@@ -353,14 +348,12 @@ var ArtistList = function ArtistList(props) {
             React.createElement(
                 "h3",
                 { className: "artistName" },
-                "Name: ",
                 artist.name,
                 " "
             ),
             React.createElement(
                 "h3",
                 { className: "artistGenere" },
-                "Genere: ",
                 artist.genere,
                 " "
             ),
@@ -373,7 +366,7 @@ var ArtistList = function ArtistList(props) {
                     method: "POST" },
                 React.createElement("input", { type: "hidden", name: "artistID", value: artist._id }),
                 React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Artist" })
+                React.createElement("input", { className: "deleteSubmit", type: "submit", value: "Delete Artist" })
             )
         );
     });
@@ -462,35 +455,50 @@ var AlbumList = function AlbumList(props) {
             "div",
             { key: album._id, className: "album" },
             React.createElement(
-                "h3",
-                { className: "albumName" },
-                "Name: ",
-                album.name,
-                " "
+                "div",
+                { className: "topSection" },
+                React.createElement("img", { className: "albumArt", src: album.art }),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "h3",
+                        { className: "albumName" },
+                        album.name,
+                        " "
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "albumArtist" },
+                        album.artist
+                    ),
+                    React.createElement(
+                        "h3",
+                        { className: "albumGenere" },
+                        "Genre: ",
+                        album.genere,
+                        " "
+                    )
+                )
             ),
             React.createElement(
                 "h3",
-                { className: "albumArtist" },
-                "Artist:",
-                album.artist
-            ),
-            React.createElement("img", { className: "albumArt", src: album.art }),
-            React.createElement(
-                "h3",
-                { className: "albumGenere" },
-                "Genere: ",
-                album.genere,
-                " "
+                null,
+                "Tracklist:"
             ),
             React.createElement(
                 "div",
-                { className: "trackList" },
-                trackNodes
-            ),
-            React.createElement(
-                "div",
-                { className: "prevList" },
-                trackPrevNodes
+                { className: "albumSongs" },
+                React.createElement(
+                    "div",
+                    { className: "trackList" },
+                    trackNodes
+                ),
+                React.createElement(
+                    "div",
+                    { className: "prevList" },
+                    trackPrevNodes
+                )
             ),
             React.createElement(
                 "form",
@@ -501,7 +509,7 @@ var AlbumList = function AlbumList(props) {
                     method: "POST" },
                 React.createElement("input", { type: "hidden", name: "albumID", value: album._id }),
                 React.createElement("input", { type: "hidden", id: "dcsrf", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { id: "deleteSubmit", type: "submit", value: "Delete Album" })
+                React.createElement("input", { className: "deleteSubmit", type: "submit", value: "Delete Album" })
             )
         );
     });

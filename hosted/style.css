@@ -4,20 +4,17 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-}
-
-#logo {
-    height: 40px;
-    width: 40;
-    padding-top: 5px;
-    float:left;
-    border-radius: 8px;
+    background: #222629;
+    color: white;
+    font-family: 'Cute Font', cursive;
+    font-size: 1.2em;
 }
 
 nav {
     width: 100%;
     height: 50px;
-    background-color: #55acee;
+    background-color: #222629;
+
 }
 
 nav:nth-child(1) {
@@ -38,59 +35,13 @@ nav:nth-child(1) {
     text-decoration: none;
     padding: 5px;
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: #B89140;
     transition: background-color 0.4s ease;
 }
 
 .navlink a:hover {
     transition: background-color 0.8s ease;
-    background-color: #66bdff;
-}
-
-.song {
-    border: 2px solid #338acc;
-}
-.domoForm {
-    border: 2px solid #338acc;
-    height: 35px;
-    width: 700px;
-    margin-top:0px;
-    padding-top:10px;
-    background-color: #55acee;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-.domoForm label {
-    display: inline-block;
-    width: 75px;
-    margin-left: 10px;
-    font-size: 1.2em;
-    float: left;
-    color: white;
-}
-
-.domoForm input[type=text] {
-    float:left;
-}
-
-.makeDomoSubmit {
-    transition: background-color 0.4s ease;
-    display: inline;
-    width: 90px;
-    background-color: #55acee;
-    border-radius: 2px;
-    color: white;
-    text-decoration: none;
-}
-
-.makeDomoSubmit:link, .makeDomoSubmit:visited, .makeDomoSubmit:hover, .makeDomoSubmit:active {
-    color: white;
-}
-
-.makeDomoSubmit:hover {
-    transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #984843;
 }
 
 .mainForm {
@@ -112,7 +63,6 @@ nav:nth-child(1) {
     text-align: right;
     font-size: 1.2em;
 }
-
 .formSubmit {
     transition: background-color 0.4s ease;
     display: block;
@@ -121,13 +71,21 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #55acee;
+    background-color: #B89140;
     border-radius: 2px;
-    border-color: #66acee;
+    border-color: #B89140;
     padding: 3px 0px;
     color: white;
     text-decoration: none;
+    font-family: 'Cute Font', cursive;
+    font-size: 1em;
 }
+
+.mainForm input {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.75em;
+}
+
 
 .formSubmit:link, .formSubmit:visited, .formSubmit:hover, .formSubmit:active {
     color: white;
@@ -135,131 +93,377 @@ nav:nth-child(1) {
 
 .formSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #984843;
 }
 
 #user, #pass, #pass2 {
     text-align: center;
-    font-size: 1.1em;
     width: 180px;
     border-radius: 6px;
 }
 
 #user:focus, #pass:focus, #pass2:focus {
     outline: none;
-    box-shadow: 0px 0px 1px 1px #55acee;
+    box-shadow: 0px 0px 1px 1px #984843;
 }
 
-#domoMessage {
-    display:none;
-    top: 250px;
-    width: 250px;
-    height: 650px;
-    position: absolute;
-    z-index: 200;
-    right: 0px;
-    overflow: hidden;
-}
-
-#domoMessage h3 {
-    width: 200px;
-    position: absolute;
-    top: 0px;
-    left: 20px;
-}
-
-#speech {
-    height: 120px;
-    width: 250px;
-    z-index:300;
-}
-
-#errorMessage {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: red;
-    font-style: italic;
-}
-
-#domo {
-    z-index: 225;
-    margin-top: -20px;
-    margin-left: 135px;
-    height: 450px;
-    width: 300px;
-    -ms-transform: rotate(330deg);
-    -webkit-transform: rotate(330deg); 
-    transform: rotate(330deg);
-}
-
-#domos {
-    width: 40%;
-    min-width: 400px;
-    border: 2px solid #55acee;
-    border-radius: 4px;
-    margin: 0 auto;
-    margin-top: 100px;
-}
-
-.domo {
-    width: 95%;
-    margin: 0 auto;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border: 2px solid #55acee;
-    border-radius: 4px;
-    background-color: #55acee;
-    padding: 10px;
-    min-height:60px;
-    overflow: hidden;
-}
-
-.domo:hover {
-    transition: border-color 0.2s ease-out;
-    border-color: rgba(255,255,255, 0.8);
-    transition: background-color 2.6s ease-out;
-    background-color: #66bfff;
-}
-
-img.domoFace {
-    margin-left: 25px;
-    margin-right: 10px;
-    height: 50px;
-    width: 50px;
-    border-radius: 4px;
-    margin-top:10px;
-    float:left;
-}
-
-h3.emptyDomo {
-    width: 400px;
-    font-size: 1.5em;
-    margin: 0 auto;
+.title {
     text-align: center;
-    margin-top: 18px;
+
 }
 
-h3.domoName {
+.choose {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.chooseBut {
+    background: #B89140;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 12px;
+    margin: 5px; 
+
+}
+
+.chooseBut:hover{
+    background:#984843;
+    border: 1px #B89140;
+}
+
+.songForm {
+    font-family: 'Cute Font', cursive;
+    border: 2px solid #984843;
+    height: 35px;
+    width: 550px;
+    margin: 10 auto;
+    padding: 10px;
+    background-color: white;
+    color: #233237;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.songForm label {
+    display: inline-block;
+    padding-right: 3px;
+    margin-left: 10px;
+    font-size: 1.2em;
+    float: left;
+    color: #233237;
+}
+
+.songForm input{
+    
+    font-family: 'Quicksand', sans-serif;
+}
+.songForm input[type=text] {
+    margin-top: 7px;
     float:left;
+}
+
+.makeSongSubmit {
+    transition: background-color 0.4s ease;
+    width: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 0;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    float: right;
+}
+
+.makeSongSubmit:link, .makeSongSubmit:visited, .makeSongSubmit:hover, .makeSongSubmit:active {
+    color: white;
+}
+
+.makeSongSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+
+.artistForm {
+    font-family: 'Cute Font', cursive;
+    border: 2px solid #984843;
+    height: 35px;
+    width: 320px;
+    margin: 10 auto;
+    padding: 10px;
+    background-color: white;
+    color: #233237;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.artistForm label {
+    display: inline-block;
+    padding-right: 3px;
+    margin-left: 10px;
+    font-size: 1.2em;
+    float: left;
+    color: #233237;
+}
+
+.artistForm input{
+    
+    font-family: 'Quicksand', sans-serif;
+}
+.artistForm input[type=text] {
+    margin-top: 7px;
+    float:left;
+}
+
+.makeArtistSubmit {
+    transition: background-color 0.4s ease;
+    width: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 0;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    float: right;
+}
+
+.makeArtistSubmit:link, .makeArtistSubmit:visited, .makeArtistSubmit:hover, .makeArtistSubmit:active {
+    color: white;
+}
+
+.makeArtistSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+.albumForm {
+    font-family: 'Cute Font', cursive;
+    border: 2px solid #984843;
+    height: 35px;
+    width: 550px;
+    margin: 10 auto;
+    padding: 10px;
+    background-color: white;
+    color: #233237;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.albumForm label {
+    display: inline-block;
+    padding-right: 3px;
+    margin-left: 10px;
+    font-size: 1.2em;
+    float: left;
+    color: #233237;
+}
+
+.albumForm input{
+    
+    font-family: 'Quicksand', sans-serif;
+}
+.albumForm input[type=text] {
+    margin-top: 7px;
+    float:left;
+}
+
+.makeAlbumSubmit {
+    transition: background-color 0.4s ease;
+    width: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 0;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    float: right;
+}
+
+.makeAlbumSubmit:link, .makeAlbumSubmit:visited, .makeAlbumSubmit:hover, .makeAlbumSubmit:active {
+    color: white;
+}
+
+.makeAlbumSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+#allT {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.song {
+    background: white;
+    color: black;
+    border: 5px solid black;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+}
+
+.song h3 {
+    margin: 0 auto;
+}
+
+.song img {
     width: 200px;
-    font-weight: bold;
-    padding-left: 65px;
-    font-size: 1.5em;
+    height: 200px;
 }
 
-h3.domoAge {
-    float:right;
-    text-align: left;
-    width: 100px;
-    font-weight: bold;
-    padding-right: 40px;
-    font-size: 1.5em;
+.deleteSubmit {
+    transition: background-color 0.4s ease;
+    width: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+}
+.deleteSubmit:link, .deleteSubmit:visited, .deleteSubmit:hover, .deleteSubmit:active {
+    color: white;
 }
 
-.domo:first-child {
+.deleteSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+.artist{
+    background: white;
+    color: black;
+    border: 5px solid black;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+}
+
+.albumSongs h3 {
+    margin: 0 auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.album h3 {
+    margin: 0 auto;
+}
+
+.album {
+    background: white;
+    color: black;
+    border: 5px solid black;
+    border-radius: 12px;
+    width: 600px;
+    text-align: center;
+}
+
+.album audio {
+    padding: 2px;
+}
+
+.albumSongs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.topSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+.topSection div{
+    padding-left: 8px;
+}
+
+#all {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: center;
+}
+.album .upvoteSubmit {
+    margin-right: 180px;
     margin-top: 10px;
 }
 
-.domo:last-child {
-    margin-bottom:10px;
+.upvoteSubmit {
+    transition: background-color 0.4s ease;
+    width: 90px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-right: 80px;
+    margin-top: 10px;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+}
+.upvoteSubmit:link, .upvoteSubmit:visited, .upvoteSubmit:hover, .upvoteSubmit:active {
+    color: white;
+}
+
+.upvoteSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+.commentSubmit {
+    transition: background-color 0.4s ease;
+    width: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    background-color: #B89140;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+}
+.commentSubmit:link, .commentSubmit:visited, .commentSubmit:hover, .commentSubmit:active {
+    color: white;
+}
+
+.commentSubmit:hover {
+    transition: background-color 0.4s ease;
+    background-color: #984843;
+}
+
+.songUpvotes{
+    text-align: right;
+    padding-top: 10px;
+    padding-right:5px;
+    flex-grow: 1;
+}
+
+.artistUpvotes{
+    margin: 0 auto;
+    text-align: right;
+    padding-top: 10px;
+    padding-right:5px;
+    flex-grow: 1;
+}
+
+.albumUpvotes{
+    margin-right: 0;
+    text-align: right;
+    padding-top: 10px;
+    padding-right:5px;
+    flex-grow: 1;
+}
+
+.upvotesSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
