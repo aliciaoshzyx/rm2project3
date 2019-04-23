@@ -90,7 +90,6 @@ const updateUpvotes = (request, response) => {
 
   const up = parseInt(req.body.upvotes, 10);
   const albumID = req.body.albumID;
-  console.log(up);
   return Album.AlbumModel.updateUpvotes(albumID, up, (err, docs) => {
     if (err) {
       console.log(err);

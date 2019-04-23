@@ -300,6 +300,32 @@ nav:nth-child(1) {
     justify-content: center;
 }
 
+.songList {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.albumList {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.artistList{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.songName {
+    padding: 5px;
+    border-radius: 12px;
+    background: #AFD4DC;
+    width: 250px;
+    margin: 0 auto;
+    margin-top: 5px;
+}
 .song {
     background: white;
     color: black;
@@ -347,10 +373,44 @@ nav:nth-child(1) {
     text-align: center;
 }
 
+.artistName {
+    padding: 5px;
+    border-radius: 12px;
+    width: 200px;
+    background: #AFD4DC;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+.artistGenere {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 .albumSongs h3 {
     margin: 0 auto;
     padding-top: 12px;
     padding-bottom: 12px;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+}
+.albumName {
+    padding: 5px;
+    border-radius: 12px;
+    background: #AFD4DC;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+.albumArtist {
+    padding: 5px;
+    border-radius: 12px;
+    width: 200px;
+    background: #96D0DD;
+    margin: 0 auto;
+    margin-top: 5px;
 }
 
 .album h3 {
@@ -380,18 +440,22 @@ nav:nth-child(1) {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    padding-top: 5px;
 
 }
 
 .topSection div{
     padding-left: 8px;
+    
 }
 
 #all {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 20px;
     justify-content: center;
+    height: 800px;
+    overflow-y: scroll;
+    margin-top: 20px;
 }
 .album .upvoteSubmit {
     margin-right: 180px;
@@ -466,4 +530,46 @@ nav:nth-child(1) {
     display: flex;
     flex-direction: row;
     justify-content: center;
+}
+
+#cont {
+    display: flex;
+    flex-direction: row;
+}
+
+#left {
+    flex-grow: 4;
+}
+
+#right {
+    flex-grow:1;
+    margin: 1em;
+}
+
+#right p {
+    height: 200px;
+    width:200px;
+    background: grey;
+
+}
+
+::-webkit-scrollbar{
+    width: 10px;
+    height: 800px;
+}
+
+::-webkit-scrollbar-button{
+    display: hidden;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+  
+::-webkit-scrollbar-thumb {
+background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #555; 
 }

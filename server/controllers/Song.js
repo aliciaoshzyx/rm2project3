@@ -90,7 +90,6 @@ const updateUpvotes = (request, response) => {
 
   const up = parseInt(req.body.upvotes, 10);
   const songID = req.body.songID;
-  console.log(up);
   return Song.SongModel.updateUpvotes(songID, up, (err, docs) => {
     if (err) {
       console.log(err);

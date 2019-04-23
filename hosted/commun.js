@@ -25,8 +25,6 @@ var handleComment = function handleComment(e) {
 
 var handleUpvote = function handleUpvote(e) {
     e.preventDefault();
-    console.log("in handle upvote");
-    console.log(e.target.id);
     $("#" + e.target.id + " :input").prop("readonly", true);
     sendAjax('POST', $("#" + e.target.id).attr("action"), $("#" + e.target.id).serialize(), function () {});
     if ($("#" + e.target.id).attr("action") == "/updateSongUpvotes") {
