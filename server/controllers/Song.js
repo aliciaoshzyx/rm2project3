@@ -75,7 +75,6 @@ const getAllSongs = (request, response) => {
   const res = response;
 
   return Song.SongModel.findAll((err, docs) => {
-    console.log(docs);
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });

@@ -573,3 +573,20 @@ background: #888;
 ::-webkit-scrollbar-thumb:hover {
 background: #555; 
 }
+
+#warn{
+    margin-top: 400px;
+    text-align: center;
+}
+
+#passChangeForm {
+    padding-top: 0;
+    width: 450px;
+}
+
+#passChangeForm label{
+    width: 200px;
+}
+#cps{
+    width: 250px;
+}

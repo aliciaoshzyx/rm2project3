@@ -105,12 +105,12 @@ const changePassword = (request, response) => {
   if (auth) {
     return Account.AccountModel.generateHash(req.body.newPass, (salt, hash) =>
     Account.AccountModel.updatePassword(username, salt, hash, (err) => {
-      
       if (err) {
         console.log(err);
         return res.status(400).json({ error: 'An error occured' });
       }
-      res.redirect( '/logout' );
+      res.redirect('/logout');
+      return false;
     }));
   }
   return false;

@@ -86,11 +86,11 @@ const PasswordWindow = (props) => {
           <label for="newPass2">retype password: </label>
           <input id="newPass2" type="password" name="newPass2" placeholder="retype password"/>
           <input type="hidden" name="_csrf" value={props.csrf} />
-          <input class="formSubmitC" type="submit" value="Change Password" />
+          <input id="cps" className="formSubmit" type="submit" value="Change Password" />
         </form>
     )
 }
-
+ 
 const createLoginWindow = (csrf) => {
     ReactDOM.render(<LoginWindow csrf={csrf} />, document.querySelector("#content"));
 };
